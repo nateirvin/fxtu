@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>XmlToTable</id>
+        <version>1.0.0</version>
+        <title>XML to Table</title>
+        <authors>Nate Irvin</authors>
+        <projectUrl>https://fxtu.codeplex.com/</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>XML to Table can import one or many XML documents into a comprehensive relational table structure that it maintains programatically.</description>
+        <summary>XML to Table is a flexible utility that shreds XML files into a relational database structure. It was designed for use in data science &amp; data mining operations, particularly for analysis by SAS.</summary>
+        <frameworkAssemblies>
+            <frameworkAssembly assemblyName="System" targetFramework=".NETFramework4.0" />
+            <frameworkAssembly assemblyName="System.Data" targetFramework=".NETFramework4.0" />
+            <frameworkAssembly assemblyName="System.Xml" targetFramework=".NETFramework4.0" />
+            <frameworkAssembly assemblyName="System.Configuration" targetFramework=".NETFramework4.0" />
+            <frameworkAssembly assemblyName="System.Core" targetFramework=".NETFramework4.0" />
+            <frameworkAssembly assemblyName="Microsoft.CSharp" targetFramework=".NETFramework4.0" />
+        </frameworkAssemblies>
+    </metadata>
+    <files>
+        <file src="ConsoleRunner\bin\Release\xml2table.exe" target="content\net40\xml2table.exe" />
+        <file src="ConsoleRunner\bin\Release\xml2table.pdb" target="content\net40\xml2table.pdb" />
+    </files>
+</package>

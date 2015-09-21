@@ -1,0 +1,89 @@
+USAGE:
+
+-help          Display this help screen
+
+         OR
+
+-sc=<connStr>  Connection string for source database.
+               Required unless generating database creation script.
+               aka -sourceConnection=<connStr>            
+            
+-ss=<spec>     Source object or query (or file containing one of those).
+               Required unless generating database creation script.
+               aka -source=<spec>
+               EXAMPLES: 
+                -source="dbo.Table"
+                -source="SELECT * FROM dbo.Table"
+                -source="tablename.txt"
+                -source="c:\query.sql"
+               
+-t=<value>     SQL timeout for source queries (in seconds).
+               Optional. Default value is 30 seconds.
+               aka -sourceTimeout=<value>
+      
+-rh=<host>     Destination host.
+               Optional. Defaults to localhost.            
+               aka -repositoryHost=<host>
+            
+-ru=<username> User to connect to destination with.
+               If blank, uses current Windows user.         
+               aka -repositoryUsername=<username>
+            
+-rp=<password> Password for destination user.
+               Ignored for current Windows user, required otherwise.
+               aka -repositoryPassword=<password>
+            
+-rn=<name>     Destination database (catalog) name.
+               Optional. Default name is 'XmlData'.
+               aka -repositoryName=<name>
+            
+-v             Verbose mode (display detailed messages).
+               If not specified, will use minimal messaging.
+               aka -verbose[=true]
+            
+-!v            Quiet mode (display minimal messages).
+               If not specified, will use minimal messaging.
+               aka -verbose=false
+            
+-z             Generate a hierarchical, instead of key-value, structure.
+               If not specified, generates hierarchical structure.
+               aka -isHierarchicalModel[=true]
+            
+-!z            Generate a key-value, instead of hierarchical, structure.
+               If not specified, generates hierarchical structure.
+               aka -isHierarchicalModel=false
+            
+-f             Use foreign keys instead of parent columns (hierarchical model).
+               If not specified, generates foreign keys.
+               aka -useForeignKeys[=true]
+            
+-!f            Use parent columns instead of foreign keys (hierarchical model).
+               If not specified, generates foreign keys.
+               aka -useForeignKeys=false
+            
+-l=<value>     The longest a table or column name can be (hierarchical model).
+               Optional. If not specified, no length restriction.
+               aka -maximumNameLength=<value>
+            
+-g=<file>      Generate database creation script (no XML processing)
+               Optional.
+               aka -creationScriptFilename=<file>
+            
+-p=<name>      The content provider to process.
+               Optional. If omitted, will process all providers.
+               aka -provider=<name>
+            
+-b=<value>     Batch size (number of documents to process in this session).
+               Optional. Defaults to 1,000.
+               aka -batchSize=<value>
+            
+-a             Run batches until all documents processed.
+               If not specified, will stop after a single batch.
+               aka -repeat[=true]
+            
+-!a            Run a single batch only.            
+               aka -repeat=false
+                     
+         OR
+         
+- when no arguments supplied, uses xml2table.exe.config -
