@@ -55,7 +55,7 @@ namespace System.Xml
                 isAtypicalPlural = node.Name.StartsWith(firstChildNodeName.Substring(0, firstChildNodeName.Length - 1));
             }
 
-            return allChildNames.Count == 1 && (isTypicalPlural || isAtypicalPlural);
+            return (allChildNames.Count != childNodesCollection.Count) || isTypicalPlural || isAtypicalPlural;
         }
 
         private static List<XmlNode> GetChildNodesCollection(this XmlNode node)
