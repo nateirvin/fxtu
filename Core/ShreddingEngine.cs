@@ -156,7 +156,8 @@ namespace XmlToTable.Core
             }
             else
             {
-                _repositoryConnection.ExecuteProcedure(SqlStatements.usp_SetPriority, new SqlParameter("@ProviderName", _settings.ProviderToProcess));
+                object parameterValue = _settings.ProviderToProcess ?? (object) DBNull.Value;
+                _repositoryConnection.ExecuteProcedure(SqlStatements.usp_SetPriority, new SqlParameter("@ProviderName", parameterValue));
             }
         }
 
