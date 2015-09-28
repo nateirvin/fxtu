@@ -86,7 +86,12 @@ namespace XmlToTable.Core
                         List<string> xPathClauses = new List<string>();
                         foreach (XmlAttribute attribute in childNode.GetAttributes())
                         {
-                            if (attribute.Name != "type")
+                            string attributeName = attribute.Name.ToLower().Trim();
+                            if (attributeName == "type" || attributeName == "id")
+                            {
+                                AddDocumentVariable(documentId, string.Format("{0}/@{1}", childNodePath, attribute.Name), attribute.Value);
+                            }
+                            else if (attributeName != "count")
                             {
                                 xPathClauses.Add(String.Format("@{0}='{1}'", attribute.Name, attribute.Value));
                             }

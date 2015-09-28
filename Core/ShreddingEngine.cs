@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Windows.Forms;
 using System.Xml;
 
 namespace XmlToTable.Core
@@ -125,12 +127,29 @@ namespace XmlToTable.Core
 
         private void UpdateImportList()
         {
-            ShowProgress(0, "Gathering documents");
+            bool shouldImport = false;
+            if (Debugger.IsAttached)
+            {
+                DialogResult response = MessageBox.Show("Do you want to import documents at this time?", "XML to Table", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                if (response == DialogResult.Yes)
+                {
+                    shouldImport = true;
+                }
+            }
+            else
+            {
+                shouldImport = true;
+            }
 
-            string sourceQuery = SqlBuilder.BuildGetAllDocumentsInfoQuery(_settings.SourceSpecification);
-            DataSet documentsDataContainer = _sourceConnection.GetDataSetFromQuery(sourceQuery, commandTimeout: _settings.SourceQueryTimeout);
+            if (shouldImport)
+            {
+                ShowProgress(0, "Gathering documents");
 
-            _repositoryConnection.ExecuteProcedure(SqlStatements.usp_ImportDocumentInfos, new SqlParameter("@Items", documentsDataContainer.Tables[0]));
+                string sourceQuery = SqlBuilder.BuildGetAllDocumentsInfoQuery(_settings.SourceSpecification);
+                DataSet documentsDataContainer = _sourceConnection.GetDataSetFromQuery(sourceQuery, commandTimeout: _settings.SourceQueryTimeout);
+
+                _repositoryConnection.ExecuteProcedure(SqlStatements.usp_ImportDocumentInfos, new SqlParameter("@Items", documentsDataContainer.Tables[0]));
+            }
         }
 
         private void SetPriorityProcessing()
