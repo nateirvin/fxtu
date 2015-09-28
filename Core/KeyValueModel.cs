@@ -67,6 +67,7 @@ namespace XmlToTable.Core
         private void Import(int documentId, string parentXPath, XmlNode node)
         {
             List<XmlNode> childNodesCollection = node.GetNestedChildren();
+            Dictionary<string, int> elementSequences = new Dictionary<string, int>();
 
             for (int i = 0; i < childNodesCollection.Count; i++)
             {
@@ -79,7 +80,12 @@ namespace XmlToTable.Core
                     childNodePath.AppendFormat("{0}/{1}", parentXPath, childNode.Name);
                     if (node.IsList())
                     {
-                        childNodePath.AppendFormat("[{0}]", i);
+                        string childNodeName = childNode.Name.ToLower();
+                        if (!elementSequences.ContainsKey(childNodeName))
+                        {
+                            elementSequences.Add(childNodeName, 0);
+                        }
+                        childNodePath.AppendFormat("[{0}]", ++elementSequences[childNodeName]);
                     }
                     else
                     {
