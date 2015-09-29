@@ -87,28 +87,17 @@ namespace XmlToTable.Core
                         }
                         childNodePath.AppendFormat("[{0}]", ++elementSequences[childNodeName]);
                     }
-                    else
+                    string currentXPath = childNodePath.ToString();
+
+                    foreach (XmlAttribute attribute in childNode.GetAttributes())
                     {
-                        List<string> xPathClauses = new List<string>();
-                        foreach (XmlAttribute attribute in childNode.GetAttributes())
+                        string attributeName = attribute.Name.ToLower().Trim();
+                        if (attributeName != "count" && attributeName != "xmlns")
                         {
-                            string attributeName = attribute.Name.ToLower().Trim();
-                            if (attributeName == "type" || attributeName == "id")
-                            {
-                                AddDocumentVariable(documentId, string.Format("{0}/@{1}", childNodePath, attribute.Name), attribute.Value);
-                            }
-                            else if (attributeName != "count")
-                            {
-                                xPathClauses.Add(String.Format("@{0}='{1}'", attribute.Name, attribute.Value));
-                            }
-                        }
-                        if (xPathClauses.Count > 0)
-                        {
-                            childNodePath.AppendFormat("[{0}]", String.Join(",", xPathClauses));
+                            AddDocumentVariable(documentId, string.Format("{0}/@{1}", currentXPath, attribute.Name), attribute.Value);
                         }
                     }
 
-                    string currentXPath = childNodePath.ToString();
                     if (isValueElement)
                     {
                         AddDocumentVariable(documentId, currentXPath, childNode.InnerText);
