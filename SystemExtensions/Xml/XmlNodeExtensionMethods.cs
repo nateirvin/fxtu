@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace System.Xml
 {
@@ -9,11 +10,17 @@ namespace System.Xml
 
         public static XmlDocument ToXmlDocument(this string rawXml)
         {
-            const string xmlDeclarationStem = "<?xml version=\"";
-            const string xmlDeclaration = xmlDeclarationStem + "1.0\" ?>";
+            const string xmlDeclarationStem = "<?xml version=";
+            const string xmlDeclaration = xmlDeclarationStem + "\"1.0\" ?>";
             if (!rawXml.StartsWith(xmlDeclarationStem))
             {
                 rawXml = xmlDeclaration + rawXml;
+            }
+
+            Regex docTypeRegex = new Regex(@"<!DOCTYPE .+? SYSTEM .+?>\s*");
+            if (docTypeRegex.IsMatch(rawXml))
+            {
+                rawXml = docTypeRegex.Replace(rawXml, string.Empty);
             }
 
             XmlDocument xmlDocument = new XmlDocument();
