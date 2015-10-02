@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>XmlToTable</id>
-        <version>1.0.1.4</version>
+        <version>1.0.1.5</version>
         <title>XML to Table</title>
         <authors>Nate Irvin</authors>
         <projectUrl>https://fxtu.codeplex.com/</projectUrl>

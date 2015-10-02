@@ -60,14 +60,13 @@ namespace XmlToTable.Core
             if (content.DocumentElement != null)
             {
                 string rootXPath = string.Format("/{0}", content.DocumentElement.Name);
+                AddVariablesFromAttributes(documentId, content.DocumentElement, rootXPath);
                 Import(documentId, rootXPath, content.DocumentElement);
             }
         }
 
         private void Import(int documentId, string parentXPath, XmlNode node)
         {
-            AddVariablesFromAttributes(documentId, node, parentXPath);
-
             List<XmlNode> childNodesCollection = node.GetNestedChildren();
             Dictionary<string, int> elementSequences = new Dictionary<string, int>();
 
@@ -134,7 +133,7 @@ namespace XmlToTable.Core
                 variable.DataKind = GetDataKindNameFromSqlType(suggestedType.Value);
                 variable.Saved = false;
             }
-            
+
             _documentVariables.Add(new DocumentVariable
             {
                 DocumentID = documentId,
@@ -218,6 +217,7 @@ namespace XmlToTable.Core
                 insertCommand.CommandText = procedureName;
                 insertCommand.CommandType = CommandType.StoredProcedure;
                 insertCommand.Parameters.AddWithValue(parameterName, parameterValue);
+                insertCommand.CommandTimeout = 60;
                 insertCommand.ExecuteNonQuery();
             }
         }
