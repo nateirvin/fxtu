@@ -66,6 +66,8 @@ namespace XmlToTable.Core
 
         private void Import(int documentId, string parentXPath, XmlNode node)
         {
+            AddVariablesFromAttributes(documentId, node, parentXPath);
+
             List<XmlNode> childNodesCollection = node.GetNestedChildren();
             Dictionary<string, int> elementSequences = new Dictionary<string, int>();
 
@@ -89,14 +91,7 @@ namespace XmlToTable.Core
                     }
                     string currentXPath = childNodePath.ToString();
 
-                    foreach (XmlAttribute attribute in childNode.GetAttributes())
-                    {
-                        string attributeName = attribute.Name.ToLower().Trim();
-                        if (attributeName != "count" && attributeName != "xmlns")
-                        {
-                            AddDocumentVariable(documentId, string.Format("{0}/@{1}", currentXPath, attribute.Name), attribute.Value);
-                        }
-                    }
+                    AddVariablesFromAttributes(documentId, childNode, currentXPath);
 
                     if (isValueElement)
                     {
@@ -106,6 +101,18 @@ namespace XmlToTable.Core
                     {
                         Import(documentId, currentXPath, childNode);
                     }
+                }
+            }
+        }
+
+        private void AddVariablesFromAttributes(int documentId, XmlNode node, string currentXPath)
+        {
+            foreach (XmlAttribute attribute in node.GetAttributes())
+            {
+                string attributeName = attribute.Name.ToLower().Trim();
+                if (attributeName != "count" && !attributeName.StartsWith("xmlns"))
+                {
+                    AddDocumentVariable(documentId, string.Format("{0}/@{1}", currentXPath, attribute.Name), attribute.Value);
                 }
             }
         }

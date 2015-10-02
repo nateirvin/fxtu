@@ -175,7 +175,7 @@ namespace XmlToTable.Core
             }
             else
             {
-                object parameterValue = _settings.ProviderToProcess ?? (object) DBNull.Value;
+                object parameterValue = !string.IsNullOrWhiteSpace(_settings.ProviderToProcess) ? _settings.ProviderToProcess : (object)DBNull.Value;
                 _repositoryConnection.ExecuteProcedure(SqlStatements.usp_SetPriority, new SqlParameter("@ProviderName", parameterValue));
             }
         }
