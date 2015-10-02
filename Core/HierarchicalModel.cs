@@ -166,31 +166,7 @@ namespace XmlToTable.Core
             int maxTableNameLength = _settings.UseForeignKeys ? _settings.MaximumNameLength - Columns.Identity.Length : _settings.MaximumNameLength;
             string actualTableName = _nameHandler.GetValidName(tableNameFromXml, maxTableNameLength, _settings.NameLengthEnforcementStyle);
 
-            DataTable table = FindTable(schemaName, actualTableName);
-            if (table == null)
-            {
-                table = new DataTable {TableName = actualTableName};
-                table.ExtendedProperties.Add(WriteStatePropertyName, PersistenceState.NotCreated);
-                table.ExtendedProperties.Add(HasContentPropertyName, false);
-                _foreignKeys.Add(table, new List<DataForeignKey>());
-
-                DataColumn identityColumn = AddNewColumn(table, Columns.Identity, SqlDbType.Int, allowDbNull: false);
-                identityColumn.Unique = true;
-                identityColumn.AutoIncrement = true;
-                identityColumn.AutoIncrementSeed = 1;
-
-                DataColumn primaryKeyColumn;
-                if (parent == null)
-                {
-                    primaryKeyColumn = AddNewColumn(table, Columns.DocumentId, SqlDbType.Int, allowDbNull: false);
-                    AddForeignKey(_documentsTable.Columns[Columns.DocumentId], primaryKeyColumn);
-                }
-                else
-                {
-                    primaryKeyColumn = identityColumn;
-                }
-                table.PrimaryKey = new[] { primaryKeyColumn };
-            }
+            DataTable table = CreateOrFindTable(schemaName, actualTableName, parent);
 
             List<XmlNode> nestedNodes = new List<XmlNode>();
             Dictionary<string, object> data = new Dictionary<string, object>();
@@ -265,15 +241,47 @@ namespace XmlToTable.Core
             }
         }
 
-        private Schema FindSchema(string schemaName)
+        private DataTable CreateOrFindTable(string schemaName, string tableName, DataRow parent)
         {
-            return _schemas.Find(x => x.Name == schemaName);
+            DataTable table = FindTable(schemaName, tableName);
+
+            if (table == null)
+            {
+                table = new DataTable {TableName = tableName};
+                table.ExtendedProperties.Add(WriteStatePropertyName, PersistenceState.NotCreated);
+                table.ExtendedProperties.Add(HasContentPropertyName, false);
+                _foreignKeys.Add(table, new List<DataForeignKey>());
+
+                DataColumn identityColumn = AddNewColumn(table, Columns.Identity, SqlDbType.Int, allowDbNull: false);
+                identityColumn.Unique = true;
+                identityColumn.AutoIncrement = true;
+                identityColumn.AutoIncrementSeed = 1;
+
+                DataColumn primaryKeyColumn;
+                if (parent == null)
+                {
+                    primaryKeyColumn = AddNewColumn(table, Columns.DocumentId, SqlDbType.Int, allowDbNull: false);
+                    AddForeignKey(_documentsTable.Columns[Columns.DocumentId], primaryKeyColumn);
+                }
+                else
+                {
+                    primaryKeyColumn = identityColumn;
+                }
+                table.PrimaryKey = new[] {primaryKeyColumn};
+            }
+
+            return table;
         }
 
         private DataTable FindTable(string schemaName, string tableName)
         {
             Schema schema = FindSchema(schemaName);
             return schema.Tables.Find(x => x.TableName.Equals(tableName, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        private Schema FindSchema(string schemaName)
+        {
+            return _schemas.Find(x => x.Name == schemaName);
         }
 
         private string AddColumnFromXmlNode(DataTable table, XmlNode node)
