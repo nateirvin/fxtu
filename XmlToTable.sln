@@ -11,6 +11,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemExtensions", "SystemExtensions\SystemExtensions.csproj", "{08E9EFF6-7132-464E-82D5-EA07B3B8AD0E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AFF9F432-4649-4F47-9B53-CBD2CB671879}"
+	ProjectSection(SolutionItems) = preProject
+		XmlToTable.nuspec = XmlToTable.nuspec
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 5

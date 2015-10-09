@@ -73,7 +73,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if "$(ConfigurationName)" == "Release" (
- "$(SolutionDir)packages\ilmerge.2.14.1208\tools\ilmerge.exe" /target:exe /out:xml2table.exe console.exe Core.dll SystemExtensions.dll
+ "$(SolutionDir)packages\ilmerge.2.14.1208\tools\ilmerge.exe" /target:exe /out:xml2table.exe console.exe XmlToTable.Core.dll SystemExtensions.dll
 )</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
