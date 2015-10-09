@@ -20,7 +20,7 @@ namespace System.Xml
             Regex docTypeRegex = new Regex(@"<!DOCTYPE .+? SYSTEM .+?>\s*");
             if (docTypeRegex.IsMatch(rawXml))
             {
-                rawXml = docTypeRegex.Replace(rawXml, string.Empty);
+                rawXml = docTypeRegex.Replace(rawXml, String.Empty);
             }
 
             XmlDocument xmlDocument = new XmlDocument();
@@ -62,7 +62,7 @@ namespace System.Xml
                 isAtypicalPlural = node.Name.StartsWith(firstChildNodeName.Substring(0, firstChildNodeName.Length - 1));
             }
 
-            return (allChildNames.Count != childNodesCollection.Count) || isTypicalPlural || isAtypicalPlural;
+            return allChildNames.Count != childNodesCollection.Count || isTypicalPlural || isAtypicalPlural;
         }
 
         private static List<XmlNode> GetChildNodesCollection(this XmlNode node)
@@ -75,6 +75,12 @@ namespace System.Xml
             return node.Attributes != null && node.Attributes.Count > 0
                 ? node.Attributes.Cast<XmlAttribute>().Where(attribute => attribute.Name != XmlNullKeyword)
                 : new List<XmlAttribute>();
+        }
+
+        public static bool IsStructuralAttribute(this XmlAttribute attribute)
+        {
+            string attributeName = attribute.Name.ToLower().Trim();
+            return attributeName == "count" || attributeName.StartsWith("xmlns");
         }
     }
 }

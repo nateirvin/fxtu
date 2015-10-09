@@ -21,7 +21,7 @@ namespace XmlToTable.Core
         internal const string MaxNameLengthPropertyName = "MaxNameLength";
         private const string DocumentsTableName = "DocumentInfos";
         private const string NameMappingTableName = "OriginalNames";
-        private readonly List<string> _reservedColumns = new List<string> {Columns.DocumentId, Columns.Identity, Columns.ParentTableName, Columns.ParentID };
+        private readonly List<string> _reservedColumns = new List<string> { Columns.DocumentId, Columns.Identity, Columns.ParentTableName, Columns.ParentID };
 
         private bool _initialized;
         private readonly IAdapterSettings _settings;
@@ -176,27 +176,23 @@ namespace XmlToTable.Core
                 data.Add(Columns.DocumentId, documentId.Value);
             }
 
+            foreach (XmlAttribute attribute in content.GetAttributes())
+            {
+                if (!attribute.IsStructuralAttribute())
+                {
+                    AddValue(table, data, attribute.Name, attribute.Value);
+                }
+            }
+
             List<XmlNode> childNodesCollection = content.ChildNodes.Cast<XmlNode>().ToList();
             if (content.IsList())
             {
-                string columnName = AddColumnFromXmlNode(table, childNodesCollection.First());
-
-                foreach (XmlNode childNode in childNodesCollection)
-                {
-                    DataRow thisRow = table.NewRow();
-                    AddParentLinks(parent, thisRow);
-                    AdjustDataType(table, columnName, childNode.InnerText);
-                    thisRow[columnName] = GetTypedValue(table, columnName, childNode);
-                    table.Rows.Add(thisRow);
-                }
+                nestedNodes.AddRange(childNodesCollection);
             }
             else
             {
                 foreach (XmlNode childNode in childNodesCollection)
                 {
-                    bool hasContent = !String.IsNullOrWhiteSpace(childNode.InnerText);
-                    bool isNull = childNode.IsNull();
-
                     List<XmlNode> nestedChildren = childNode.GetNestedChildren();
                     if (nestedChildren.Any())
                     {
@@ -204,12 +200,7 @@ namespace XmlToTable.Core
                     }
                     else
                     {
-                        if (hasContent || isNull)
-                        {
-                            string columnName = AddColumnFromXmlNode(table, childNode);
-                            AdjustDataType(table, columnName, childNode.InnerText);
-                            data.Add(columnName, GetTypedValue(table, columnName, childNode));
-                        }
+                        AddValue(table, data, childNode.Name, childNode.InnerText, childNode.IsNull());
                     }
                 }
             }
@@ -238,6 +229,17 @@ namespace XmlToTable.Core
             foreach (XmlNode nestedNode in nestedNodes)
             {
                 Import(schemaName, firstRow, nestedNode);
+            }
+        }
+
+        private void AddValue(DataTable table, Dictionary<string, object> data, string elementName, string value, bool isNull = false)
+        {
+            bool hasContent = !String.IsNullOrWhiteSpace(value);
+            if (hasContent || isNull)
+            {
+                string columnName = AddColumnFromXml(table, elementName, value);
+                AdjustDataType(table, columnName, value);
+                data.Add(columnName, GetTypedValue(table, columnName, value));
             }
         }
 
@@ -284,15 +286,15 @@ namespace XmlToTable.Core
             return _schemas.Find(x => x.Name == schemaName);
         }
 
-        private string AddColumnFromXmlNode(DataTable table, XmlNode node)
+        private string AddColumnFromXml(DataTable table, string elementName, string value)
         {
-            string proposedColumnName = BuildColumnNameFromXml(table, node);
+            string proposedColumnName = BuildColumnName(table, elementName);
             string actualColumnName = _nameHandler.GetValidName(proposedColumnName, _settings.MaximumNameLength, _settings.NameLengthEnforcementStyle);
 
             if (!table.Columns.Contains(actualColumnName))
             {
                 int? maxLength = null;
-                SqlDbType? columnType = _dataTypeHelper.SuggestType(null, node.InnerText.ToNullPreferredString());
+                SqlDbType? columnType = _dataTypeHelper.SuggestType(null, value.ToNullPreferredString());
                 if (!columnType.HasValue)
                 {
                     columnType = SqlDbType.NVarChar;
@@ -314,43 +316,24 @@ namespace XmlToTable.Core
             return actualColumnName;
         }
 
-        private void AddOriginalName(string tableName, string columnName, string originalName)
+        private string BuildColumnName(DataTable table, string rawName)
         {
-            DataRow row = _namesTable.NewRow();
-            row["TableName"] = tableName;
-            row["ColumnName"] = columnName ?? String.Empty;
-            row["OriginalName"] = originalName;
-            _namesTable.Rows.Add(row);
-        }
-
-        private string BuildColumnNameFromXml(DataTable table, XmlNode node)
-        {
-            string basicName = node.Name.ToSqlName();
-            if (basicName.StartsWith(table.TableName, StringComparison.CurrentCultureIgnoreCase))
+            string name = rawName.ToSqlName().Trim();
+            if (name.StartsWith(table.TableName, StringComparison.CurrentCultureIgnoreCase))
             {
-                basicName = basicName.Replace(table.TableName, String.Empty);
+                name = name.Replace(table.TableName, String.Empty);
             }
-            if (basicName.StartsWith("-"))
+            if (name.StartsWith("-"))
             {
-                basicName = basicName.Substring(1, basicName.Length - 1);
+                name = name.Substring(1, name.Length - 1);
             }
 
-            StringBuilder columnNameFromXml = new StringBuilder(basicName);
-
-            if (node.Attributes != null && node.Attributes.Count > 0)
+            if (_reservedColumns.Exists(x => x.Equals(name, StringComparison.CurrentCultureIgnoreCase)))
             {
-                foreach (XmlAttribute attribute in node.GetAttributes())
-                {
-                    columnNameFromXml.AppendFormat("_{0}_{1}", attribute.Name.ToSqlName(), attribute.Value);
-                }
+                name = string.Format("provider_{0}", name);
             }
 
-            if (_reservedColumns.Contains(columnNameFromXml.ToString()))
-            {
-                columnNameFromXml.Append("2");
-            }
-
-            return columnNameFromXml.ToString().Trim();
+            return name;
         }
 
         private DataColumn AddNewColumn(DataTable table, string columnName, SqlDbType dataType, bool allowDbNull = true, int? maxLength = null)
@@ -367,6 +350,15 @@ namespace XmlToTable.Core
 
             table.Columns.Add(column);
             return column;
+        }
+
+        private void AddOriginalName(string tableName, string columnName, string originalName)
+        {
+            DataRow row = _namesTable.NewRow();
+            row["TableName"] = tableName;
+            row["ColumnName"] = columnName ?? String.Empty;
+            row["OriginalName"] = originalName;
+            _namesTable.Rows.Add(row);
         }
 
         internal void AdjustDataType(DataTable table, string columnName, string value)
@@ -519,9 +511,9 @@ namespace XmlToTable.Core
             _foreignKeys[table].Add(constraint);
         }
 
-        private object GetTypedValue(DataTable table, string columnName, XmlNode childNode)
+        private object GetTypedValue(DataTable table, string columnName, string value)
         {
-            return _dataTypeHelper.ConvertTo(table.Columns[columnName].DataType, childNode.InnerText.ToNullPreferredString());
+            return _dataTypeHelper.ConvertTo(table.Columns[columnName].DataType, value.ToNullPreferredString());
         }
 
         public void SaveChanges(SqlTransactionExtended transaction)

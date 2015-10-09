@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using NUnit.Framework;
 using XmlToTable.Core;
 
@@ -7,6 +8,14 @@ namespace Tests
     [TestFixture]
     public class DataTypeHelperTests
     {
+        private DataTypeHelper _classUnderTest;
+
+        [SetUp]
+        public void RunBeforeEachTest()
+        {
+            _classUnderTest = new DataTypeHelper();
+        }
+
         [TestCase(null, null, null)]
         [TestCase(SqlDbType.NVarChar, null, "zero")]
 
@@ -61,8 +70,19 @@ namespace Tests
         [TestCase(SqlDbType.NVarChar, SqlDbType.DateTime, "false")]
         public void SuggestType(SqlDbType? expected, SqlDbType? current, string newValue)
         {
-            DataTypeHelper classUnderTest = new DataTypeHelper();
-            Assert.AreEqual(expected, classUnderTest.SuggestType(current, newValue));
+            Assert.AreEqual(expected, _classUnderTest.SuggestType(current, newValue));
+        }
+
+        [Test]
+        public void ConvertTo_CanConvertToGuid()
+        {
+            string rawValue = "ec0e9af3580e565f20109609f717cd62";
+            Guid expected = Guid.Parse(rawValue);
+
+            object actual = _classUnderTest.ConvertTo(typeof (Guid), rawValue);
+
+            Assert.IsInstanceOf<Guid>(actual);
+            Assert.AreEqual(expected, actual);
         }
     }
 }

@@ -108,8 +108,7 @@ namespace XmlToTable.Core
         {
             foreach (XmlAttribute attribute in node.GetAttributes())
             {
-                string attributeName = attribute.Name.ToLower().Trim();
-                if (attributeName != "count" && !attributeName.StartsWith("xmlns"))
+                if (!attribute.IsStructuralAttribute())
                 {
                     AddDocumentVariable(documentId, string.Format("{0}/@{1}", currentXPath, attribute.Name), attribute.Value);
                 }

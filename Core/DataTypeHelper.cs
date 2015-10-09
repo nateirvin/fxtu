@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Data;
+using System.Reflection;
 
 namespace XmlToTable.Core
 {
@@ -123,9 +124,13 @@ namespace XmlToTable.Core
             {
                 return rawValue.ToNullPreferredString();
             }
-            else if (destinationType == typeof (DateTime))
+            else
             {
-                return DateTime.Parse(rawValue);
+                MethodInfo methodInfo = destinationType.GetPublicStaticMethod("Parse");
+                if (methodInfo != null)
+                {
+                    return methodInfo.Invoke(null, new object[] {rawValue});
+                }
             }
 
             TypeConverter converter = TypeDescriptor.GetConverter(destinationType);
