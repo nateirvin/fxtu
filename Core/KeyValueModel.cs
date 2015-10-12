@@ -60,6 +60,7 @@ namespace XmlToTable.Core
             if (content.DocumentElement != null)
             {
                 string rootXPath = string.Format("/{0}", content.DocumentElement.Name);
+                AddVariablesFromAttributes(documentId, content.DocumentElement, rootXPath);
                 Import(documentId, rootXPath, content.DocumentElement);
             }
         }
@@ -67,6 +68,7 @@ namespace XmlToTable.Core
         private void Import(int documentId, string parentXPath, XmlNode node)
         {
             List<XmlNode> childNodesCollection = node.GetNestedChildren();
+            Dictionary<string, int> elementSequences = new Dictionary<string, int>();
 
             for (int i = 0; i < childNodesCollection.Count; i++)
             {
@@ -79,25 +81,17 @@ namespace XmlToTable.Core
                     childNodePath.AppendFormat("{0}/{1}", parentXPath, childNode.Name);
                     if (node.IsList())
                     {
-                        childNodePath.AppendFormat("[{0}]", i);
-                    }
-                    else
-                    {
-                        List<string> xPathClauses = new List<string>();
-                        foreach (XmlAttribute attribute in childNode.GetAttributes())
+                        string childNodeName = childNode.Name.ToLower();
+                        if (!elementSequences.ContainsKey(childNodeName))
                         {
-                            if (attribute.Name != "type")
-                            {
-                                xPathClauses.Add(String.Format("@{0}='{1}'", attribute.Name, attribute.Value));
-                            }
+                            elementSequences.Add(childNodeName, 0);
                         }
-                        if (xPathClauses.Count > 0)
-                        {
-                            childNodePath.AppendFormat("[{0}]", String.Join(",", xPathClauses));
-                        }
+                        childNodePath.AppendFormat("[{0}]", ++elementSequences[childNodeName]);
                     }
-
                     string currentXPath = childNodePath.ToString();
+
+                    AddVariablesFromAttributes(documentId, childNode, currentXPath);
+
                     if (isValueElement)
                     {
                         AddDocumentVariable(documentId, currentXPath, childNode.InnerText);
@@ -106,6 +100,17 @@ namespace XmlToTable.Core
                     {
                         Import(documentId, currentXPath, childNode);
                     }
+                }
+            }
+        }
+
+        private void AddVariablesFromAttributes(int documentId, XmlNode node, string currentXPath)
+        {
+            foreach (XmlAttribute attribute in node.GetAttributes())
+            {
+                if (!attribute.IsStructuralAttribute())
+                {
+                    AddDocumentVariable(documentId, string.Format("{0}/@{1}", currentXPath, attribute.Name), attribute.Value);
                 }
             }
         }
@@ -127,7 +132,7 @@ namespace XmlToTable.Core
                 variable.DataKind = GetDataKindNameFromSqlType(suggestedType.Value);
                 variable.Saved = false;
             }
-            
+
             _documentVariables.Add(new DocumentVariable
             {
                 DocumentID = documentId,
@@ -211,6 +216,7 @@ namespace XmlToTable.Core
                 insertCommand.CommandText = procedureName;
                 insertCommand.CommandType = CommandType.StoredProcedure;
                 insertCommand.Parameters.AddWithValue(parameterName, parameterValue);
+                insertCommand.CommandTimeout = 60;
                 insertCommand.ExecuteNonQuery();
             }
         }

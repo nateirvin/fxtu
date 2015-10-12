@@ -194,10 +194,12 @@ namespace XmlToTable.Console
 
         private static void PrintException(Exception exception, CommandLineOptions startupOptions)
         {
-            System.Console.WriteLine();
-            System.Console.WriteLine("ERROR:");
+            TextWriter outputStream = System.Console.Error;
             bool verbose = startupOptions != null && startupOptions.Verbose;
-            System.Console.WriteLine(verbose ? exception.ToString() : exception.Message);
+
+            outputStream.WriteLine();
+            outputStream.WriteLine("ERROR:");
+            outputStream.WriteLine(verbose ? exception.ToString() : exception.Message);
         }
 
         private static void ShowProgress(object sender, ProgressChangedEventArgs progressChangedEventArgs)

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>XmlToTable</id>
-        <version>1.0.0</version>
+        <version>1.0.1.6</version>
         <title>XML to Table</title>
         <authors>Nate Irvin</authors>
         <projectUrl>https://fxtu.codeplex.com/</projectUrl>
@@ -14,12 +14,11 @@
             <frameworkAssembly assemblyName="System.Data" targetFramework=".NETFramework4.0" />
             <frameworkAssembly assemblyName="System.Xml" targetFramework=".NETFramework4.0" />
             <frameworkAssembly assemblyName="System.Configuration" targetFramework=".NETFramework4.0" />
-            <frameworkAssembly assemblyName="System.Core" targetFramework=".NETFramework4.0" />
-            <frameworkAssembly assemblyName="Microsoft.CSharp" targetFramework=".NETFramework4.0" />
+			<frameworkAssembly assemblyName="System.Windows.Forms" targetFramework=".NETFramework4.0" />
         </frameworkAssemblies>
     </metadata>
     <files>
-        <file src="ConsoleRunner\bin\Release\xml2table.exe" target="content\net40\xml2table.exe" />
-        <file src="ConsoleRunner\bin\Release\xml2table.pdb" target="content\net40\xml2table.pdb" />
+        <file src="ConsoleRunner\bin\Release\XmlToTable.Core.dll" target="content\net40\XmlToTable.Core.dll" />
+        <file src="ConsoleRunner\bin\Release\SystemExtensions.dll" target="content\net40\SystemExtensions.dll" />
     </files>
 </package>

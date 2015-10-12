@@ -56,9 +56,7 @@ namespace XmlToTable.Core
                 throw new ArgumentNullException("value");
             }
 
-            MethodInfo[] publicStaticMethods = typeof(T).GetMethods(BindingFlags.Static | BindingFlags.Public);
-            MethodInfo methodInfo = publicStaticMethods.FirstOrDefault(x => x.Name == "TryParse");
-
+            MethodInfo methodInfo = GetPublicStaticMethod<T>("TryParse");
             if (methodInfo != null)
             {
                 T receiver = default(T);
@@ -68,6 +66,17 @@ namespace XmlToTable.Core
             }
 
             return CheckTypeSlowly<T>(value);
+        }
+
+        private static MethodInfo GetPublicStaticMethod<T>(string methodName)
+        {
+            return GetPublicStaticMethod(typeof (T), methodName);
+        }
+
+        public static MethodInfo GetPublicStaticMethod(this Type type, string methodName)
+        {
+            MethodInfo[] publicStaticMethods = type.GetMethods(BindingFlags.Static | BindingFlags.Public);
+            return publicStaticMethods.FirstOrDefault(x => x.Name == methodName);
         }
 
         private static bool CheckTypeSlowly<T>(object value)
