@@ -5,6 +5,7 @@
         <version>1.0.1.6</version>
         <title>XML to Table</title>
         <authors>Nate Irvin</authors>
+        <licenseUrl>https://fxtu.codeplex.com/license</licenseUrl>
         <projectUrl>https://fxtu.codeplex.com/</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>XML to Table can import one or many XML documents into a comprehensive relational table structure that it maintains programatically.</description>
@@ -14,11 +15,11 @@
             <frameworkAssembly assemblyName="System.Data" targetFramework=".NETFramework4.0" />
             <frameworkAssembly assemblyName="System.Xml" targetFramework=".NETFramework4.0" />
             <frameworkAssembly assemblyName="System.Configuration" targetFramework=".NETFramework4.0" />
-			<frameworkAssembly assemblyName="System.Windows.Forms" targetFramework=".NETFramework4.0" />
+            <frameworkAssembly assemblyName="System.Windows.Forms" targetFramework=".NETFramework4.0" />
         </frameworkAssemblies>
     </metadata>
     <files>
-        <file src="ConsoleRunner\bin\Release\XmlToTable.Core.dll" target="content\net40\XmlToTable.Core.dll" />
         <file src="ConsoleRunner\bin\Release\SystemExtensions.dll" target="content\net40\SystemExtensions.dll" />
+        <file src="ConsoleRunner\bin\Release\XmlToTable.Core.dll" target="content\net40\XmlToTable.Core.dll" />
     </files>
 </package>
