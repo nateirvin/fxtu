@@ -132,6 +132,16 @@ namespace XmlToTable.Core
             _initialized = true;
         }
 
+        public bool RequiresUpgrade(SqlConnection repositoryConnection)
+        {
+            return false;
+        }
+
+        public void UpgradeDatabase(SqlConnection repositoryConnection)
+        {
+            throw new NotSupportedException();
+        }
+
         public void ImportDocument(int documentId, string providerName, XmlDocument content)
         {
             string schemaName = providerName.ToSqlName();

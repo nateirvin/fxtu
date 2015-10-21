@@ -59,6 +59,16 @@ namespace XmlToTable.Core
             Adapter.Initialize(repositoryConnection);
         }
 
+        public bool RequiresUpgrade(SqlConnection repositoryConnection)
+        {
+            return Adapter.RequiresUpgrade(repositoryConnection);
+        }
+
+        public void UpgradeDatabase(SqlConnection repositoryConnection)
+        {
+            Adapter.UpgradeDatabase(repositoryConnection);
+        }
+
         public void ImportDocument(int documentId, string providerName, XmlDocument content)
         {
             Adapter.ImportDocument(documentId, providerName, content);

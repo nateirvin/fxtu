@@ -55,7 +55,7 @@ namespace XmlToTable.Core
         private void CreateRepositoryIfNecessary()
         {
             string repositoryName = _settings.RepositoryName;
-            int databaseId = GetInt32(_repositoryConnection, SqlStatements.GetDatabaseId, new SqlParameter("@DatabaseName", repositoryName));
+            int databaseId = _repositoryConnection.GetInt32(SqlStatements.GetDatabaseId, new SqlParameter("@DatabaseName", repositoryName));
 
             if (databaseId == 0)
             {
@@ -66,12 +66,18 @@ namespace XmlToTable.Core
             else
             {
                 _repositoryConnection.SwitchDatabaseContext(repositoryName);
+
+                if (_adapterContext.RequiresUpgrade(_repositoryConnection))
+                {
+                    ShowProgress(0, "Upgrading database");
+                    _adapterContext.UpgradeDatabase(_repositoryConnection);
+                }
             }
         }
 
         private void ValidateSettings()
         {
-            int objectId = GetInt32(_repositoryConnection, SqlStatements.GetObjectId, new SqlParameter("@ObjectName", "dbo.Variables"));
+            int objectId = _repositoryConnection.GetInt32(SqlStatements.GetObjectId, new SqlParameter("@ObjectName", "dbo.Variables"));
             bool isKeyValueModel = objectId != 0;
 
             if (_settings.IsHierarchicalModel)
@@ -329,23 +335,6 @@ namespace XmlToTable.Core
             DataTable table = new DataTable();
             table.Columns.Add("ID", typeof(int));
             return table;
-        }
-
-        private static int GetInt32(SqlConnection connection, string query, params SqlParameter[] parameters)
-        {
-            using (SqlCommand getCommand = new SqlCommand(query))
-            {
-                getCommand.Connection = connection;
-                getCommand.CommandType = CommandType.Text;
-                if (parameters != null)
-                {
-                    getCommand.Parameters.AddRange(parameters);
-                }
-
-                object rawValue = getCommand.ExecuteScalar();
-
-                return (rawValue == DBNull.Value || rawValue == null) ? 0 : (int)rawValue;
-            }
         }
 
         private void ShowProgress(int progress, string message)

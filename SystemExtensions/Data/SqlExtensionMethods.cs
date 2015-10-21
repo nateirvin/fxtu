@@ -28,7 +28,7 @@ namespace System.Data
             return sql.Split(new[] { batchSeparator }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public static void ExecuteStatement(this IDbConnection connection, string sql, params IDbDataParameter[] parameters)
+        private static void ExecuteStatement(this IDbConnection connection, string sql, params IDbDataParameter[] parameters)
         {
             ExecuteSql(connection, sql, parameters, CommandType.Text);
         }
@@ -64,6 +64,23 @@ namespace System.Data
         public static string BuildUseStatement(string databaseName)
         {
             return String.Format("USE [{0}]", databaseName);
+        }
+
+        public static int GetInt32(this SqlConnection connection, string query, params SqlParameter[] parameters)
+        {
+            using (SqlCommand getCommand = new SqlCommand(query))
+            {
+                getCommand.Connection = connection;
+                getCommand.CommandType = CommandType.Text;
+                if (parameters != null)
+                {
+                    getCommand.Parameters.AddRange(parameters);
+                }
+
+                object rawValue = getCommand.ExecuteScalar();
+
+                return (rawValue == DBNull.Value || rawValue == null) ? 0 : (int)rawValue;
+            }
         }
     }
 }

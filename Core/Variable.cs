@@ -5,5 +5,6 @@ namespace XmlToTable.Core
         public string XPath { get; set; }
         public string DataKind { get; set; }
         public bool Saved { get; set; }
+        public int? LongestValueLength { get; set; }
     }
 }
