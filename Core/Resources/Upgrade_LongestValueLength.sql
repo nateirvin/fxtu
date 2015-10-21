@@ -32,3 +32,18 @@ BEGIN
 
 END
 GO
+
+WITH VariableStats AS
+(
+	SELECT 
+		VariableID,
+		MAX(LEN(VariableValue)) AS MaxLen
+	FROM [dbo].[DocumentVariables]
+	GROUP BY VariableID
+)
+UPDATE dbo.Variables
+SET LongestValueLength = MaxLen
+FROM VariableStats
+WHERE Variables.VariableID = VariableStats.VariableID
+GO
+

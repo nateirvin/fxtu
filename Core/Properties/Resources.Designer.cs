@@ -87,13 +87,14 @@ namespace XmlToTable.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to set xact_abort on;
-        ///begin tran;
-        ///
-        ///ALTER TABLE dbo.Variables ADD LongestValueLength INT NULL;
+        ///   Looks up a localized string similar to ALTER TABLE dbo.Variables ADD LongestValueLength INT NULL;
+        ///GO
         ///
         ///DROP PROCEDURE [dbo].[usp_UpdateDataKinds];
+        ///GO
+        ///
         ///DROP TYPE [dbo].[Variable]
+        ///GO
         ///
         ///CREATE TYPE [dbo].[Variable] AS TABLE(
         ///	[VariableName] [nvarchar](512) NOT NULL,
@@ -111,31 +112,11 @@ namespace XmlToTable.Core.Properties {
         ///
         ///	MERGE dbo.Variables AS dest
         ///	USING @Updates AS src
-        ///	ON sr [rest of string was truncated]&quot;;.
+        ///	ON src.VariableName = dest [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string LongestValueLengthUpgradeScript {
             get {
                 return ResourceManager.GetString("LongestValueLengthUpgradeScript", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to WITH VariableStats AS
-        ///(
-        ///	SELECT 
-        ///		VariableID,
-        ///		MAX(LEN(VariableValue)) AS MaxLen
-        ///	FROM [dbo].[DocumentVariables]
-        ///	GROUP BY VariableID
-        ///)
-        ///UPDATE dbo.Variables
-        ///SET LongestValueLength = MaxLen
-        ///FROM VariableStats
-        ///WHERE Variables.VariableID = VariableStats.VariableID.
-        /// </summary>
-        internal static string PopulateVariableLengthColumnSql {
-            get {
-                return ResourceManager.GetString("PopulateVariableLengthColumnSql", resourceCulture);
             }
         }
         

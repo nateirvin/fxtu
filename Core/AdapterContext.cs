@@ -54,6 +54,11 @@ namespace XmlToTable.Core
             get { return Adapter.DatabaseCreationScript; }
         }
 
+        public string DatabaseUpgradeScript
+        {
+            get { return Adapter.DatabaseUpgradeScript; }
+        }
+
         public void Initialize(SqlConnection repositoryConnection)
         {
             Adapter.Initialize(repositoryConnection);
@@ -66,7 +71,32 @@ namespace XmlToTable.Core
 
         public void UpgradeDatabase(SqlConnection repositoryConnection)
         {
-            Adapter.UpgradeDatabase(repositoryConnection);
+            SqlTransaction transaction = null;
+            try
+            {
+                transaction = repositoryConnection.BeginTransaction();
+
+                foreach (string statement in Adapter.DatabaseUpgradeScript.ToSqlStatements())
+                {
+                    using (SqlCommand objectModificationStatement = new SqlCommand(statement))
+                    {
+                        objectModificationStatement.Connection = repositoryConnection;
+                        objectModificationStatement.Transaction = transaction;
+                        objectModificationStatement.CommandType = CommandType.Text;
+                        objectModificationStatement.CommandTimeout = 300;
+                        objectModificationStatement.ExecuteNonQuery();
+                    }
+                }
+
+                transaction.Commit();
+            }
+            finally
+            {
+                if (transaction != null)
+                {
+                    transaction.Dispose();
+                }
+            }
         }
 
         public void ImportDocument(int documentId, string providerName, XmlDocument content)

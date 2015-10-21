@@ -137,9 +137,9 @@ namespace XmlToTable.Core
             return false;
         }
 
-        public void UpgradeDatabase(SqlConnection repositoryConnection)
+        public string DatabaseUpgradeScript
         {
-            throw new NotSupportedException();
+            get { return null; }
         }
 
         public void ImportDocument(int documentId, string providerName, XmlDocument content)
