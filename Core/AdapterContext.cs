@@ -49,6 +49,30 @@ namespace XmlToTable.Core
             return creationScript.ToString();
         }
 
+        public string GenerateDatabaseUpgradeScript()
+        {
+            StringBuilder script = new StringBuilder();
+            script.AppendLine(SqlExtensionMethods.BuildUseStatement(_settings.RepositoryName));
+            script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
+            script.AppendLine(SqlServer.BeginTransactionStatement);
+            script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
+            script.AppendLine(Adapter.DatabaseUpgradeScript);
+            script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
+            script.AppendLine(SqlServer.CommitTransactionStatement);
+            script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
+            return script.ToString();
+        }
+
+        public void CreateDatabase(SqlConnection repositoryConnection)
+        {
+            ExecuteObjectTransaction(repositoryConnection, Adapter.DatabaseCreationScript, 15);
+        }
+
+        public void UpgradeDatabase(SqlConnection repositoryConnection)
+        {
+            ExecuteObjectTransaction(repositoryConnection, Adapter.DatabaseUpgradeScript, 300);
+        }
+
         public string DatabaseCreationScript
         {
             get { return Adapter.DatabaseCreationScript; }
@@ -69,21 +93,21 @@ namespace XmlToTable.Core
             return Adapter.RequiresUpgrade(repositoryConnection);
         }
 
-        public void UpgradeDatabase(SqlConnection repositoryConnection)
+        private static void ExecuteObjectTransaction(SqlConnection repositoryConnection, string script, int timeout)
         {
             SqlTransaction transaction = null;
             try
             {
                 transaction = repositoryConnection.BeginTransaction();
 
-                foreach (string statement in Adapter.DatabaseUpgradeScript.ToSqlStatements())
+                foreach (string statement in script.ToSqlStatements())
                 {
                     using (SqlCommand objectModificationStatement = new SqlCommand(statement))
                     {
                         objectModificationStatement.Connection = repositoryConnection;
                         objectModificationStatement.Transaction = transaction;
                         objectModificationStatement.CommandType = CommandType.Text;
-                        objectModificationStatement.CommandTimeout = 300;
+                        objectModificationStatement.CommandTimeout = timeout;
                         objectModificationStatement.ExecuteNonQuery();
                     }
                 }

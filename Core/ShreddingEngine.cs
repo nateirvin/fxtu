@@ -60,8 +60,7 @@ namespace XmlToTable.Core
             if (databaseId == 0)
             {
                 ShowProgress(0, "Creating database");
-                string creationScript = _adapterContext.GenerateDatabaseCreationScript();
-                _repositoryConnection.ExecuteStatements(creationScript);
+                _adapterContext.CreateDatabase(_repositoryConnection);
             }
             else
             {

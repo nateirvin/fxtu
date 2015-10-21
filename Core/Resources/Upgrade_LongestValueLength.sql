@@ -45,5 +45,4 @@ UPDATE dbo.Variables
 SET LongestValueLength = MaxLen
 FROM VariableStats
 WHERE Variables.VariableID = VariableStats.VariableID
-GO
 
