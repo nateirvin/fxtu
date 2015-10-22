@@ -52,14 +52,17 @@ namespace XmlToTable.Core
         public string GenerateDatabaseUpgradeScript()
         {
             StringBuilder script = new StringBuilder();
-            script.AppendLine(SqlExtensionMethods.BuildUseStatement(_settings.RepositoryName));
-            script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
-            script.AppendLine(SqlServer.BeginTransactionStatement);
-            script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
-            script.AppendLine(Adapter.DatabaseUpgradeScript);
-            script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
-            script.AppendLine(SqlServer.CommitTransactionStatement);
-            script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
+            if (!string.IsNullOrWhiteSpace(Adapter.DatabaseUpgradeScript))
+            {
+                script.AppendLine(SqlExtensionMethods.BuildUseStatement(_settings.RepositoryName));
+                script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
+                script.AppendLine(SqlServer.BeginTransactionStatement);
+                script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
+                script.AppendLine(Adapter.DatabaseUpgradeScript);
+                script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
+                script.AppendLine(SqlServer.CommitTransactionStatement);
+                script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
+            }
             return script.ToString();
         }
 

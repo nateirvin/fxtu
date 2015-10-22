@@ -43,17 +43,29 @@ namespace XmlToTable.Console
 
                 if (!exitCode.HasValue)
                 {
-                    if (programSettings.GenerateCreationScript)
+                    if (programSettings.GenerateCreationScript || programSettings.GenerateUpgradeScript)
                     {
-                        try
+                        AdapterContext context = new AdapterContext(programSettings);
+                        string script = programSettings.GenerateCreationScript ? context.GenerateDatabaseCreationScript() : context.GenerateDatabaseUpgradeScript();
+                        string filename = programSettings.GenerateCreationScript ? programSettings.CreationScriptFilename : programSettings.UpgradeScriptFilename;
+
+                        if (!string.IsNullOrWhiteSpace(script))
                         {
-                            WriteDatabaseCreationScript(programSettings);
-                            exitCode = ERROR_SUCCESS;
+                            try
+                            {
+                                File.WriteAllText(filename, script);
+                                exitCode = ERROR_SUCCESS;
+                            }
+                            catch (Exception fileException)
+                            {
+                                PrintException(fileException, programSettings);
+                                exitCode = GetExitCodeFromFileException(fileException);
+                            }
                         }
-                        catch (Exception fileException)
+                        else
                         {
-                            PrintException(fileException, programSettings);
-                            exitCode = GetExitCodeFromFileException(fileException);
+                            System.Console.WriteLine("No upgrade necessary.");
+                            exitCode = ERROR_SUCCESS;
                         }
                     }
 
@@ -168,13 +180,6 @@ namespace XmlToTable.Console
             }
 
             return startupOptions;
-        }
-
-        private static void WriteDatabaseCreationScript(CommandLineOptions programSettings)
-        {
-            AdapterContext context = new AdapterContext(programSettings);
-            string creationScript = context.GenerateDatabaseCreationScript();
-            File.WriteAllText(programSettings.CreationScriptFilename, creationScript);
         }
 
         private static int? GetExitCodeFromFileException(Exception fileException)
