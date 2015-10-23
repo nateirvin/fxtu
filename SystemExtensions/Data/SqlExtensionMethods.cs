@@ -15,14 +15,6 @@ namespace System.Data
             connection.ExecuteStatement(BuildUseStatement(databaseName));
         }
 
-        public static void ExecuteStatements(this IDbConnection connection, string sql, string batchSeparator = SqlServer.DefaultBatchSeparator)
-        {
-            foreach (string statement in sql.ToSqlStatements(batchSeparator))
-            {
-                connection.ExecuteStatement(statement);
-            }
-        }
-
         public static string[] ToSqlStatements(this string sql, string batchSeparator = SqlServer.DefaultBatchSeparator)
         {
             return sql.Split(new[] { batchSeparator }, StringSplitOptions.RemoveEmptyEntries);

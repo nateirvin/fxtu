@@ -67,6 +67,8 @@
     <Compile Include="ShreddingEngine.cs" />
     <Compile Include="SqlStatements.cs" />
     <Compile Include="TooLongNameBehavior.cs" />
+    <Compile Include="Upgrades\IUpgrade.cs" />
+    <Compile Include="Upgrades\LongestValueUpgrade.cs" />
     <Compile Include="Variable.cs" />
   </ItemGroup>
   <ItemGroup>

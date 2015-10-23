@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Text;
 using System.Xml;
 using XmlToTable.Core.Properties;
+using XmlToTable.Core.Upgrades;
 
 namespace XmlToTable.Core
 {
@@ -36,9 +37,9 @@ namespace XmlToTable.Core
             get { return Resources.VerticalDatabaseCreationScript; }
         }
 
-        public string DatabaseUpgradeScript
+        public IEnumerable<IUpgrade> Upgrades
         {
-            get { return Resources.LongestValueLengthUpgradeScript; }
+            get { return new List<IUpgrade> {new LongestValueUpgrade()}; }
         }
 
         public void Initialize(SqlConnection repositoryConnection)
@@ -67,12 +68,6 @@ namespace XmlToTable.Core
 
                 _documentVariables = new List<DocumentVariable>();
             }
-        }
-
-        public bool RequiresUpgrade(SqlConnection repositoryConnection)
-        {
-            int flag = repositoryConnection.GetInt32(SqlStatements.ColumnExists, new SqlParameter("@column_name", Columns.LongestValueLength));
-            return flag == 0;
         }
 
         public void ImportDocument(int documentId, string providerName, XmlDocument content)

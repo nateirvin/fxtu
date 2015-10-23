@@ -1,7 +1,10 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Text;
 using System.Xml;
+using XmlToTable.Core.Upgrades;
 
 namespace XmlToTable.Core
 {
@@ -45,35 +48,13 @@ namespace XmlToTable.Core
             creationScript.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
             creationScript.AppendLine(SqlExtensionMethods.BuildUseStatement(_settings.RepositoryName));
             creationScript.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
-            creationScript.AppendLine(Adapter.DatabaseCreationScript);
+            creationScript.AppendLine(DatabaseCreationScript);
             return creationScript.ToString();
-        }
-
-        public string GenerateDatabaseUpgradeScript()
-        {
-            StringBuilder script = new StringBuilder();
-            if (!string.IsNullOrWhiteSpace(Adapter.DatabaseUpgradeScript))
-            {
-                script.AppendLine(SqlExtensionMethods.BuildUseStatement(_settings.RepositoryName));
-                script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
-                script.AppendLine(SqlServer.BeginTransactionStatement);
-                script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
-                script.AppendLine(Adapter.DatabaseUpgradeScript);
-                script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
-                script.AppendLine(SqlServer.CommitTransactionStatement);
-                script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
-            }
-            return script.ToString();
         }
 
         public void CreateDatabase(SqlConnection repositoryConnection)
         {
-            ExecuteObjectTransaction(repositoryConnection, Adapter.DatabaseCreationScript, 15);
-        }
-
-        public void UpgradeDatabase(SqlConnection repositoryConnection)
-        {
-            ExecuteObjectTransaction(repositoryConnection, Adapter.DatabaseUpgradeScript, 300);
+            ExecuteObjectTransaction(repositoryConnection, DatabaseCreationScript, 15);
         }
 
         public string DatabaseCreationScript
@@ -81,19 +62,59 @@ namespace XmlToTable.Core
             get { return Adapter.DatabaseCreationScript; }
         }
 
-        public string DatabaseUpgradeScript
+        public bool RequiresUpgrade(SqlConnection repositoryConnection)
         {
-            get { return Adapter.DatabaseUpgradeScript; }
+            return Upgrades.Any(upgrade => upgrade.IsRequired(repositoryConnection));
+        }
+
+        public string GenerateDatabaseUpgradeScript()
+        {
+            StringBuilder script = new StringBuilder();
+            
+            if (Upgrades.Any())
+            {
+                script.AppendLine(SqlExtensionMethods.BuildUseStatement(_settings.RepositoryName));
+                script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
+                script.AppendLine(SqlServer.BeginTransactionStatement);
+                script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
+                foreach (IUpgrade upgrade in Upgrades)
+                {
+                    script.AppendLine(upgrade.DatabaseScript);
+                }
+                script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
+                script.AppendLine(SqlServer.CommitTransactionStatement);
+                script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
+            }
+
+            return script.ToString();
+        }
+
+        public void UpgradeDatabase(SqlConnection repositoryConnection)
+        {
+            StringBuilder batch = new StringBuilder();
+            foreach (IUpgrade upgrade in Upgrades)
+            {
+                if (upgrade.IsRequired(repositoryConnection))
+                {
+                    batch.AppendLine(upgrade.DatabaseScript);
+                    batch.AppendLine(SqlServer.DefaultBatchSeparator);
+                }
+            }
+
+            if (batch.Length > 0)
+            {
+                ExecuteObjectTransaction(repositoryConnection, batch.ToString(), 300);
+            }
+        }
+
+        public IEnumerable<IUpgrade> Upgrades
+        {
+            get { return Adapter.Upgrades; }
         }
 
         public void Initialize(SqlConnection repositoryConnection)
         {
             Adapter.Initialize(repositoryConnection);
-        }
-
-        public bool RequiresUpgrade(SqlConnection repositoryConnection)
-        {
-            return Adapter.RequiresUpgrade(repositoryConnection);
         }
 
         private static void ExecuteObjectTransaction(SqlConnection repositoryConnection, string script, int timeout)
