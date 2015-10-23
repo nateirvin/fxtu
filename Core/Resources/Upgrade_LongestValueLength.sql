@@ -33,6 +33,20 @@ BEGIN
 END
 GO
 
+ALTER PROCEDURE dbo.usp_GetAllVariables
+AS
+BEGIN
+
+	SELECT 
+		VariableID,
+		VariableName,
+		DataKind,
+		LongestValueLength
+	FROM dbo.Variables
+
+END
+GO
+
 WITH VariableStats AS
 (
 	SELECT 
