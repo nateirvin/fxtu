@@ -20,7 +20,7 @@ namespace System.Data
             return sql.Split(new[] { batchSeparator }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        private static void ExecuteStatement(this IDbConnection connection, string sql, params IDbDataParameter[] parameters)
+        public static void ExecuteStatement(this IDbConnection connection, string sql, params IDbDataParameter[] parameters)
         {
             ExecuteSql(connection, sql, parameters, CommandType.Text);
         }

@@ -62,15 +62,13 @@ namespace XmlToTable.Core
                 ShowProgress(0, "Creating database");
                 _adapterContext.CreateDatabase(_repositoryConnection);
             }
-            else
-            {
-                _repositoryConnection.SwitchDatabaseContext(repositoryName);
 
-                if (_adapterContext.RequiresUpgrade(_repositoryConnection))
-                {
-                    ShowProgress(0, "Upgrading database");
-                    _adapterContext.UpgradeDatabase(_repositoryConnection);
-                }
+            _repositoryConnection.SwitchDatabaseContext(repositoryName);
+
+            if (_adapterContext.RequiresUpgrade(_repositoryConnection))
+            {
+                ShowProgress(0, "Upgrading database");
+                _adapterContext.UpgradeDatabase(_repositoryConnection);
             }
         }
 

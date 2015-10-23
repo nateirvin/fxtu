@@ -41,6 +41,13 @@ namespace XmlToTable.Core
             }
         }
 
+        public void CreateDatabase(SqlConnection repositoryConnection)
+        {
+            repositoryConnection.ExecuteStatement(SqlBuilder.BuildCreateDatabaseStatement(_settings.RepositoryName));
+            repositoryConnection.SwitchDatabaseContext(_settings.RepositoryName);
+            ExecuteObjectTransaction(repositoryConnection, DatabaseCreationScript, 15);
+        }
+
         public string GenerateDatabaseCreationScript()
         {
             StringBuilder creationScript = new StringBuilder();
@@ -50,11 +57,6 @@ namespace XmlToTable.Core
             creationScript.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
             creationScript.AppendLine(DatabaseCreationScript);
             return creationScript.ToString();
-        }
-
-        public void CreateDatabase(SqlConnection repositoryConnection)
-        {
-            ExecuteObjectTransaction(repositoryConnection, DatabaseCreationScript, 15);
         }
 
         public string DatabaseCreationScript
@@ -107,16 +109,6 @@ namespace XmlToTable.Core
             }
         }
 
-        public IEnumerable<IUpgrade> Upgrades
-        {
-            get { return Adapter.Upgrades; }
-        }
-
-        public void Initialize(SqlConnection repositoryConnection)
-        {
-            Adapter.Initialize(repositoryConnection);
-        }
-
         private static void ExecuteObjectTransaction(SqlConnection repositoryConnection, string script, int timeout)
         {
             SqlTransaction transaction = null;
@@ -145,6 +137,16 @@ namespace XmlToTable.Core
                     transaction.Dispose();
                 }
             }
+        }
+
+        public IEnumerable<IUpgrade> Upgrades
+        {
+            get { return Adapter.Upgrades; }
+        }
+
+        public void Initialize(SqlConnection repositoryConnection)
+        {
+            Adapter.Initialize(repositoryConnection);
         }
 
         public void ImportDocument(int documentId, string providerName, XmlDocument content)
