@@ -46,7 +46,7 @@ namespace XmlToTable.Console
 
                     if (!exitCode.HasValue)
                     {
-                        exitCode = LoadSourceScript(programSettings);
+                        exitCode = LoadSourceScriptIfNecessary(programSettings);
                     }
                 }
             }
@@ -157,21 +157,30 @@ namespace XmlToTable.Console
             return exitCode;
         }
 
-        private static int? LoadSourceScript(CommandLineOptions programSettings)
+        private static int? LoadSourceScriptIfNecessary(CommandLineOptions programSettings)
         {
             int? exitCode = null;
 
-            try
+            string sourceSpecification = programSettings.SourceSpecification;
+            if (IsFile(sourceSpecification))
             {
-                programSettings.SourceSpecification = File.ReadAllText(programSettings.SourceSpecification);
-            }
-            catch (Exception fileException)
-            {
-                PrintException(fileException, programSettings);
-                exitCode = GetExitCodeFromFileException(fileException);
+                try
+                {
+                    programSettings.SourceSpecification = File.ReadAllText(sourceSpecification);
+                }
+                catch (Exception fileException)
+                {
+                    PrintException(fileException, programSettings);
+                    exitCode = GetExitCodeFromFileException(fileException);
+                }
             }
 
             return exitCode;
+        }
+
+        private static bool IsFile(string sourceSpecification)
+        {
+            return File.Exists(sourceSpecification);
         }
 
         private static int? HandleShredding(CommandLineOptions programSettings)
