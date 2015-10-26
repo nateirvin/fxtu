@@ -121,6 +121,9 @@
   <data name="HierarchicalDatabaseCreationScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CreateDatabaseObjects.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-16</value>
   </data>
+  <data name="LongestValueLengthUpgradeScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Upgrade_LongestValueLength.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
   <data name="VerticalDatabaseCreationScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CreateVerticalDatabaseObjects.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-16</value>
   </data>

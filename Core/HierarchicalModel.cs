@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using XmlToTable.Core.Properties;
+using XmlToTable.Core.Upgrades;
 
 namespace XmlToTable.Core
 {
@@ -56,6 +57,11 @@ namespace XmlToTable.Core
                 script.AppendFormat("EXEC {0} @name='{1}', @value='{2}'", SqlServer.sp_AddExtendedProperty, MaxNameLengthPropertyName, _settings.MaximumNameLength).AppendLine();
                 return script.ToString();
             }
+        }
+
+        public IEnumerable<IUpgrade> Upgrades
+        {
+            get { return new List<IUpgrade>(); }
         }
 
         public void Initialize(SqlConnection repositoryConnection)

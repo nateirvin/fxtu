@@ -12,5 +12,6 @@
         internal const string XPathColumnName = "VariableName";
         internal const string ValueColumnName = "VariableValue";
         internal const string DataKind = "DataKind";
+        internal const string LongestValueLength = "LongestValueLength";
     }
 }

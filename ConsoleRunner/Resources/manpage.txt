@@ -68,6 +68,10 @@ USAGE:
 -g=<file>      Generate database creation script (no XML processing)
                Optional.
                aka -creationScriptFilename=<file>
+
+-m=<file>      Generate database upgrade script (no XML processing)
+               Optional.
+               aka -upgradeScriptFilename=<file>
             
 -p=<name>      The content provider to process.
                Optional. If omitted, will process all providers.

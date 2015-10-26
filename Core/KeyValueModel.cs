@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Text;
 using System.Xml;
 using XmlToTable.Core.Properties;
+using XmlToTable.Core.Upgrades;
 
 namespace XmlToTable.Core
 {
@@ -36,6 +37,11 @@ namespace XmlToTable.Core
             get { return Resources.VerticalDatabaseCreationScript; }
         }
 
+        public IEnumerable<IUpgrade> Upgrades
+        {
+            get { return new List<IUpgrade> {new LongestValueUpgrade()}; }
+        }
+
         public void Initialize(SqlConnection repositoryConnection)
         {
             if (_variables == null)
@@ -48,7 +54,16 @@ namespace XmlToTable.Core
                 {
                     string variableName = row[Columns.VariableName].ToString();
                     string dataKind = row[Columns.DataKind].ToString();
-                    _variables.Add(variableName, new Variable {XPath = variableName, DataKind = dataKind, Saved = true});
+                    int? maxLength = row[Columns.LongestValueLength] == DBNull.Value ? (int?) null : (int)row[Columns.LongestValueLength];
+
+                    _variables.Add(variableName,
+                        new Variable
+                        {
+                            XPath = variableName,
+                            DataKind = dataKind,
+                            LongestValueLength = maxLength,
+                            Saved = true
+                        });
                 }
 
                 _documentVariables = new List<DocumentVariable>();
@@ -133,6 +148,15 @@ namespace XmlToTable.Core
                 variable.Saved = false;
             }
 
+            if (useableValue != null)
+            {
+                if (useableValue.Length > variable.LongestValueLength.GetValueOrDefault())
+                {
+                    variable.LongestValueLength = useableValue.Length;
+                    variable.Saved = false;
+                }
+            }
+
             _documentVariables.Add(new DocumentVariable
             {
                 DocumentID = documentId,
@@ -165,7 +189,7 @@ namespace XmlToTable.Core
         {
             transaction.Finished += OnTransactionFinished;
             SaveDocumentVariables(transaction);
-            SaveDataKindChanges(transaction);
+            SaveVariableMetadataChanges(transaction);
         }
 
         private void SaveDocumentVariables(SqlTransactionExtended transaction)
@@ -187,24 +211,31 @@ namespace XmlToTable.Core
             ExecuteMergeProcedure(transaction, SqlStatements.usp_InsertVariables, "@DocumentVariables", parameterValue);
         }
 
-        private void SaveDataKindChanges(SqlTransactionExtended transaction)
+        private void SaveVariableMetadataChanges(SqlTransactionExtended transaction)
         {
             DataTable parameterValue = new DataTable();
             parameterValue.Columns.Add(Columns.VariableName, typeof(string));
             parameterValue.Columns.Add(Columns.DataKind, typeof(string));
+            parameterValue.Columns.Add(Columns.LongestValueLength, typeof(int));
 
             foreach (Variable variable in _variables.Values)
             {
                 if (!variable.Saved)
                 {
                     DataRow parameterRow = parameterValue.NewRow();
+
                     parameterRow[Columns.VariableName] = variable.XPath;
                     parameterRow[Columns.DataKind] = variable.DataKind ?? DefaultDataKind;
+                    parameterRow[Columns.LongestValueLength] =
+                        variable.LongestValueLength.HasValue
+                            ? (object) variable.LongestValueLength.Value
+                            : DBNull.Value;
+
                     parameterValue.Rows.Add(parameterRow);
                 }
             }
             
-            ExecuteMergeProcedure(transaction, SqlStatements.usp_UpdateDataKinds, "@Updates", parameterValue);
+            ExecuteMergeProcedure(transaction, SqlStatements.usp_UpdateVariables, "@Updates", parameterValue);
         }
 
         private static void ExecuteMergeProcedure(SqlTransactionExtended transaction, string procedureName, string parameterName, DataTable parameterValue)

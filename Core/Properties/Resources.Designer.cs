@@ -22,7 +22,7 @@ namespace XmlToTable.Core.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Resources {
+    internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -80,9 +80,43 @@ namespace XmlToTable.Core.Properties {
         ///	[TableName] [sysname] NOT NULL,
         ///	[Column [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string HierarchicalDatabaseCreationScript {
+        internal static string HierarchicalDatabaseCreationScript {
             get {
                 return ResourceManager.GetString("HierarchicalDatabaseCreationScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ALTER TABLE dbo.Variables ADD LongestValueLength INT NULL;
+        ///GO
+        ///
+        ///DROP PROCEDURE [dbo].[usp_UpdateDataKinds];
+        ///GO
+        ///
+        ///DROP TYPE [dbo].[Variable]
+        ///GO
+        ///
+        ///CREATE TYPE [dbo].[Variable] AS TABLE(
+        ///	[VariableName] [nvarchar](512) NOT NULL,
+        ///	[DataKind] [varchar](50) NOT NULL,
+        ///	[LongestValueLength] [int] NULL
+        ///);
+        ///GO
+        ///
+        ///CREATE PROCEDURE dbo.usp_UpdateVariables
+        ///	@Updates AS dbo.[Variable] READONLY
+        ///AS
+        ///BEGIN
+        ///
+        ///	SET XACT_ABORT ON;
+        ///
+        ///	MERGE dbo.Variables AS dest
+        ///	USING @Updates AS src
+        ///	ON src.VariableName = dest [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string LongestValueLengthUpgradeScript {
+            get {
+                return ResourceManager.GetString("LongestValueLengthUpgradeScript", resourceCulture);
             }
         }
         
@@ -104,7 +138,7 @@ namespace XmlToTable.Core.Properties {
         ///CREATE TABLE [dbo].[DocumentVariables](
         ///	[DocumentID [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string VerticalDatabaseCreationScript {
+        internal static string VerticalDatabaseCreationScript {
             get {
                 return ResourceManager.GetString("VerticalDatabaseCreationScript", resourceCulture);
             }

@@ -180,6 +180,7 @@ namespace XmlToTable.Core
 
         public virtual string GetRepositoryConnectionAddress()
         {
+            // ReSharper disable once CollectionNeverUpdated.Local
             SqlConnectionStringBuilder connectionAddressBuilder = new SqlConnectionStringBuilder();
 
             connectionAddressBuilder.DataSource = RepositoryHostName;

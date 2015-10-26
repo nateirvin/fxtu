@@ -1,7 +1,10 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Text;
 using System.Xml;
+using XmlToTable.Core.Upgrades;
 
 namespace XmlToTable.Core
 {
@@ -38,6 +41,13 @@ namespace XmlToTable.Core
             }
         }
 
+        public void CreateDatabase(SqlConnection repositoryConnection)
+        {
+            repositoryConnection.ExecuteStatement(SqlBuilder.BuildCreateDatabaseStatement(_settings.RepositoryName));
+            repositoryConnection.SwitchDatabaseContext(_settings.RepositoryName);
+            ExecuteObjectTransaction(repositoryConnection, DatabaseCreationScript, 15);
+        }
+
         public string GenerateDatabaseCreationScript()
         {
             StringBuilder creationScript = new StringBuilder();
@@ -45,13 +55,96 @@ namespace XmlToTable.Core
             creationScript.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
             creationScript.AppendLine(SqlExtensionMethods.BuildUseStatement(_settings.RepositoryName));
             creationScript.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
-            creationScript.AppendLine(Adapter.DatabaseCreationScript);
+            creationScript.AppendLine(DatabaseCreationScript);
             return creationScript.ToString();
         }
 
         public string DatabaseCreationScript
         {
             get { return Adapter.DatabaseCreationScript; }
+        }
+
+        public bool RequiresUpgrade(SqlConnection repositoryConnection)
+        {
+            return Upgrades.Any(upgrade => upgrade.IsRequired(repositoryConnection));
+        }
+
+        public string GenerateDatabaseUpgradeScript()
+        {
+            StringBuilder script = new StringBuilder();
+            
+            if (Upgrades.Any())
+            {
+                script.AppendLine(SqlExtensionMethods.BuildUseStatement(_settings.RepositoryName));
+                script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
+                script.AppendLine(SqlServer.BeginTransactionStatement);
+                script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
+                foreach (IUpgrade upgrade in Upgrades)
+                {
+                    script.AppendLine(upgrade.DatabaseScript);
+                }
+                script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
+                script.AppendLine(SqlServer.CommitTransactionStatement);
+                script.AppendLine(SqlServer.DefaultBatchSeparator).AppendLine();
+            }
+
+            return script.ToString();
+        }
+
+        public void UpgradeDatabase(SqlConnection repositoryConnection)
+        {
+            StringBuilder batch = new StringBuilder();
+            foreach (IUpgrade upgrade in Upgrades)
+            {
+                if (upgrade.IsRequired(repositoryConnection))
+                {
+                    batch.AppendLine(upgrade.DatabaseScript);
+                    batch.AppendLine(SqlServer.DefaultBatchSeparator);
+                }
+            }
+
+            if (batch.Length > 0)
+            {
+                ExecuteObjectTransaction(repositoryConnection, batch.ToString(), 300);
+            }
+        }
+
+        private static void ExecuteObjectTransaction(SqlConnection repositoryConnection, string script, int timeout)
+        {
+            SqlTransaction transaction = null;
+            try
+            {
+                transaction = repositoryConnection.BeginTransaction();
+
+                foreach (string statement in script.ToSqlStatements())
+                {
+                    if (!string.IsNullOrWhiteSpace(statement))
+                    {
+                        using (SqlCommand objectModificationStatement = new SqlCommand(statement))
+                        {
+                            objectModificationStatement.Connection = repositoryConnection;
+                            objectModificationStatement.Transaction = transaction;
+                            objectModificationStatement.CommandType = CommandType.Text;
+                            objectModificationStatement.CommandTimeout = timeout;
+                            objectModificationStatement.ExecuteNonQuery();
+                        }
+                    }
+                }
+
+                transaction.Commit();
+            }
+            finally
+            {
+                if (transaction != null)
+                {
+                    transaction.Dispose();
+                }
+            }
+        }
+
+        public IEnumerable<IUpgrade> Upgrades
+        {
+            get { return Adapter.Upgrades; }
         }
 
         public void Initialize(SqlConnection repositoryConnection)

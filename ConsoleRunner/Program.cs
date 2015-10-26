@@ -26,9 +26,8 @@ namespace XmlToTable.Console
         private static int Main(string[] args)
         {
             System.Console.CancelKeyPress += OnConsoleCancelKeyPress;
-            System.Console.WriteLine("XML to Table");
-            System.Console.WriteLine("Imports and shreds XML files to a SQL Server database");
-            System.Console.WriteLine();
+
+            PrintHeader();
 
             int? exitCode = null;
             CommandLineOptions programSettings = null;
@@ -43,31 +42,11 @@ namespace XmlToTable.Console
 
                 if (!exitCode.HasValue)
                 {
-                    if (programSettings.GenerateCreationScript)
-                    {
-                        try
-                        {
-                            WriteDatabaseCreationScript(programSettings);
-                            exitCode = ERROR_SUCCESS;
-                        }
-                        catch (Exception fileException)
-                        {
-                            PrintException(fileException, programSettings);
-                            exitCode = GetExitCodeFromFileException(fileException);
-                        }
-                    }
+                    exitCode = HandleScriptOutputFlow(programSettings);
 
-                    if (!exitCode.HasValue && File.Exists(programSettings.SourceSpecification))
+                    if (!exitCode.HasValue)
                     {
-                        try
-                        {
-                            programSettings.SourceSpecification = File.ReadAllText(programSettings.SourceSpecification);
-                        }
-                        catch (Exception fileException)
-                        {
-                            PrintException(fileException, programSettings);
-                            exitCode = GetExitCodeFromFileException(fileException);
-                        }
+                        exitCode = LoadSourceScriptIfNecessary(programSettings);
                     }
                 }
             }
@@ -79,46 +58,10 @@ namespace XmlToTable.Console
 
             if (!exitCode.HasValue)
             {
-                try
-                {
-                    using (ShreddingEngine engine = new ShreddingEngine(programSettings))
-                    {
-                        engine.OnProgressChanged += ShowProgress;
-                        engine.Initialize();
-
-                        if (programSettings.Repeat)
-                        {
-                            System.Console.WriteLine("** Press CTRL+C to stop early **");
-                        }
-
-                        do
-                        {
-                            int processedCount = engine.Shred(programSettings.BatchSize);
-                            if (processedCount == 0)
-                            {
-                                _continueShredding = false;
-                            }
-                            _continueShredding = _continueShredding.GetValueOrDefault(programSettings.Repeat);
-                        } while (_continueShredding.Value);
-
-                        exitCode = ERROR_SUCCESS;
-                    }
-                }
-                catch (Exception engineException)
-                {
-                    PrintException(engineException, programSettings);
-                    exitCode = ERROR_INVALID_DATA;
-                }
+                exitCode = HandleShredding(programSettings);
             }
 
-            System.Console.WriteLine(exitCode.Value == 0 ? "Done!" : "Program execution stopped.");
-
-            if (Debugger.IsAttached)
-            {
-                System.Console.WriteLine();
-                System.Console.Write("Press any key to exit...");
-                System.Console.ReadKey();
-            }
+            HandleApplicationClose(exitCode.Value);
 
             return exitCode.Value;
         }
@@ -127,6 +70,13 @@ namespace XmlToTable.Console
         {
             consoleCancelEventArgs.Cancel = true;
             _continueShredding = false;
+        }
+
+        private static void PrintHeader()
+        {
+            System.Console.WriteLine("XML to Table");
+            System.Console.WriteLine("Imports and shreds XML files to a SQL Server database");
+            System.Console.WriteLine();
         }
 
         private static CommandLineOptions GetStartupOptions(string[] commandLineArguments)
@@ -170,11 +120,105 @@ namespace XmlToTable.Console
             return startupOptions;
         }
 
-        private static void WriteDatabaseCreationScript(CommandLineOptions programSettings)
+        private static int? HandleScriptOutputFlow(CommandLineOptions programSettings)
         {
-            AdapterContext context = new AdapterContext(programSettings);
-            string creationScript = context.GenerateDatabaseCreationScript();
-            File.WriteAllText(programSettings.CreationScriptFilename, creationScript);
+            int? exitCode = null;
+
+            if (programSettings.GenerateCreationScript || programSettings.GenerateUpgradeScript)
+            {
+                AdapterContext context = new AdapterContext(programSettings);
+                string script = programSettings.GenerateCreationScript
+                    ? context.GenerateDatabaseCreationScript()
+                    : context.GenerateDatabaseUpgradeScript();
+                string filename = programSettings.GenerateCreationScript
+                    ? programSettings.CreationScriptFilename
+                    : programSettings.UpgradeScriptFilename;
+
+                if (!string.IsNullOrWhiteSpace(script))
+                {
+                    try
+                    {
+                        File.WriteAllText(filename, script);
+                        exitCode = ERROR_SUCCESS;
+                    }
+                    catch (Exception fileException)
+                    {
+                        PrintException(fileException, programSettings);
+                        exitCode = GetExitCodeFromFileException(fileException);
+                    }
+                }
+                else
+                {
+                    System.Console.WriteLine("No upgrade necessary.");
+                    exitCode = ERROR_SUCCESS;
+                }
+            }
+
+            return exitCode;
+        }
+
+        private static int? LoadSourceScriptIfNecessary(CommandLineOptions programSettings)
+        {
+            int? exitCode = null;
+
+            string sourceSpecification = programSettings.SourceSpecification;
+            if (IsFile(sourceSpecification))
+            {
+                try
+                {
+                    programSettings.SourceSpecification = File.ReadAllText(sourceSpecification);
+                }
+                catch (Exception fileException)
+                {
+                    PrintException(fileException, programSettings);
+                    exitCode = GetExitCodeFromFileException(fileException);
+                }
+            }
+
+            return exitCode;
+        }
+
+        private static bool IsFile(string sourceSpecification)
+        {
+            return File.Exists(sourceSpecification);
+        }
+
+        private static int? HandleShredding(CommandLineOptions programSettings)
+        {
+            int? exitCode;
+
+            try
+            {
+                using (ShreddingEngine engine = new ShreddingEngine(programSettings))
+                {
+                    engine.OnProgressChanged += ShowProgress;
+                    engine.Initialize();
+
+                    if (programSettings.Repeat)
+                    {
+                        System.Console.WriteLine("** Press CTRL+C to stop early **");
+                    }
+
+                    do
+                    {
+                        int processedCount = engine.Shred(programSettings.BatchSize);
+                        if (processedCount == 0)
+                        {
+                            _continueShredding = false;
+                        }
+                        _continueShredding = _continueShredding.GetValueOrDefault(programSettings.Repeat);
+                    } while (_continueShredding.Value);
+
+                    exitCode = ERROR_SUCCESS;
+                }
+            }
+            catch (Exception engineException)
+            {
+                PrintException(engineException, programSettings);
+                exitCode = ERROR_INVALID_DATA;
+            }
+
+            return exitCode;
         }
 
         private static int? GetExitCodeFromFileException(Exception fileException)
@@ -218,6 +262,18 @@ namespace XmlToTable.Console
                 {
                     System.Console.WriteLine();
                 }
+            }
+        }
+
+        private static void HandleApplicationClose(int exitCode)
+        {
+            System.Console.WriteLine(exitCode == 0 ? "Done!" : "Program execution stopped.");
+
+            if (Debugger.IsAttached)
+            {
+                System.Console.WriteLine();
+                System.Console.Write("Press any key to exit...");
+                System.Console.ReadKey();
             }
         }
     }
