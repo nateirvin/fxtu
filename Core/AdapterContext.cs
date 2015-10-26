@@ -118,13 +118,16 @@ namespace XmlToTable.Core
 
                 foreach (string statement in script.ToSqlStatements())
                 {
-                    using (SqlCommand objectModificationStatement = new SqlCommand(statement))
+                    if (!string.IsNullOrWhiteSpace(statement))
                     {
-                        objectModificationStatement.Connection = repositoryConnection;
-                        objectModificationStatement.Transaction = transaction;
-                        objectModificationStatement.CommandType = CommandType.Text;
-                        objectModificationStatement.CommandTimeout = timeout;
-                        objectModificationStatement.ExecuteNonQuery();
+                        using (SqlCommand objectModificationStatement = new SqlCommand(statement))
+                        {
+                            objectModificationStatement.Connection = repositoryConnection;
+                            objectModificationStatement.Transaction = transaction;
+                            objectModificationStatement.CommandType = CommandType.Text;
+                            objectModificationStatement.CommandTimeout = timeout;
+                            objectModificationStatement.ExecuteNonQuery();
+                        }
                     }
                 }
 
