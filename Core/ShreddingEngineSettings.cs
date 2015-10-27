@@ -99,8 +99,8 @@ namespace XmlToTable.Core
         [ConfigurableProperty("maximumNameLength", DefaultValue = int.MaxValue, ShortcutName = "l")]
         public virtual int MaximumNameLength { get; set; }
 
-        [ConfigurableProperty("innerXmlDocumentQuery", ShortcutName = "i")]
-        public string EmbeddedXmlUpgradeDocumentsQuery { get; set; }
+        [ConfigurableProperty("redoDocumentsQuery", ShortcutName = "i")]
+        public string UpgradeDocumentsQuery { get; set; }
 
         public TooLongNameBehavior NameLengthEnforcementStyle
         {

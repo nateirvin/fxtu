@@ -7,6 +7,6 @@
         int MaximumNameLength { get; }
         TooLongNameBehavior NameLengthEnforcementStyle { get; }
         bool UseForeignKeys { get; }
-        string EmbeddedXmlUpgradeDocumentsQuery { get; }
+        string UpgradeDocumentsQuery { get; }
     }
 }

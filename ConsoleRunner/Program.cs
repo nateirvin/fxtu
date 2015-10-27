@@ -40,6 +40,7 @@ namespace XmlToTable.Console
                 }
                 else
                 {
+                    programSettings.UpgradeDocumentsQuery = GetSpecification(programSettings.UpgradeDocumentsQuery);
                     if (!HandleScriptOutputFlow(programSettings))
                     {
                         programSettings.SourceSpecification = GetSpecification(programSettings.SourceSpecification);

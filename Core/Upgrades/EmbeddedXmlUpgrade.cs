@@ -7,7 +7,7 @@ namespace XmlToTable.Core.Upgrades
 {
     public class EmbeddedXmlUpgrade : IUpgrade
     {
-        private readonly string _documentQuery;
+        private string _documentQuery;
 
         public EmbeddedXmlUpgrade(string documentQuery)
         {
@@ -24,9 +24,13 @@ namespace XmlToTable.Core.Upgrades
         {
             get
             {
+                if (!_documentQuery.IsSelectQuery())
+                {
+                    _documentQuery = null;
+                }
                 if (string.IsNullOrWhiteSpace(_documentQuery))
                 {
-                    throw new InvalidOperationException("Missing query to identify documents.");
+                    throw new InvalidOperationException("Missing or invalid query to identify documents.");
                 }
                 return Resources.EmbeddedXmlUpgradeScript.Replace("/* QUERY */", _documentQuery);
             }

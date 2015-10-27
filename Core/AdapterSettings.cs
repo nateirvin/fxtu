@@ -8,7 +8,7 @@
             UseForeignKeys = true;
             MaximumNameLength = int.MaxValue;
             NameLengthEnforcementStyle = TooLongNameBehavior.Throw;
-            EmbeddedXmlUpgradeDocumentsQuery = null;
+            UpgradeDocumentsQuery = null;
         }
 
         public string RepositoryName { get; private set; }
@@ -16,6 +16,6 @@
         public int MaximumNameLength { get; set; }
         public TooLongNameBehavior NameLengthEnforcementStyle { get; set; }
         public bool UseForeignKeys { get; set; }
-        public string EmbeddedXmlUpgradeDocumentsQuery { get; set; }
+        public string UpgradeDocumentsQuery { get; set; }
     }
 }
