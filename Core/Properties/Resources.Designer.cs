@@ -61,6 +61,36 @@ namespace XmlToTable.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CREATE PROCEDURE dbo.usp_ReprocessDocuments
+        ///	@Documents AS dbo.ids READONLY
+        ///AS
+        ///BEGIN
+        ///
+        ///	SET XACT_ABORT ON;
+        ///
+        ///	BEGIN TRANSACTION;
+        ///
+        ///		DELETE dbo.DocumentVariables
+        ///		WHERE DocumentID IN (SELECT ID FROM @Documents)
+        ///
+        ///		DELETE dbo.Variables
+        ///		WHERE VariableID IN
+        ///		(
+        ///			SELECT Variables.VariableID
+        ///			FROM dbo.Variables
+        ///				LEFT JOIN dbo.DocumentVariables
+        ///					ON Variables.VariableID = DocumentVariables.VariableID
+        ///			GROUP BY Variables.VariableID
+        ///			HAVING COUNT(DocumentVariables.DocumentID) = 0
+        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string EmbeddedXmlUpgradeScript {
+            get {
+                return ResourceManager.GetString("EmbeddedXmlUpgradeScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CREATE TABLE [dbo].[DocumentInfos]
         ///(
         ///	[DocumentID] [int] NOT NULL,

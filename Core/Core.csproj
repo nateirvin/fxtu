@@ -67,6 +67,7 @@
     <Compile Include="ShreddingEngine.cs" />
     <Compile Include="SqlStatements.cs" />
     <Compile Include="TooLongNameBehavior.cs" />
+    <Compile Include="Upgrades\EmbeddedXmlUpgrade.cs" />
     <Compile Include="Upgrades\IUpgrade.cs" />
     <Compile Include="Upgrades\LongestValueUpgrade.cs" />
     <Compile Include="Variable.cs" />
@@ -99,6 +100,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Upgrade_LongestValueLength.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\EmbeddedXmlUpgradeScript.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

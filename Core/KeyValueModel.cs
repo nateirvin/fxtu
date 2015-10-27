@@ -23,12 +23,14 @@ namespace XmlToTable.Core
                 new Tuple<string, SqlDbType>("true/false", SqlDbType.Bit)
             };
 
+        private readonly IAdapterSettings _settings;
         private Dictionary<string, Variable> _variables;
         private List<DocumentVariable> _documentVariables;
         private readonly IDataTypeHelper _dataTypeHelper;
 
-        public KeyValueModel()
+        public KeyValueModel(IAdapterSettings settings = null)
         {
+            _settings = settings ?? new AdapterSettings();
             _dataTypeHelper = new DataTypeHelper();
         }
 
@@ -39,7 +41,14 @@ namespace XmlToTable.Core
 
         public IEnumerable<IUpgrade> Upgrades
         {
-            get { return new List<IUpgrade> {new LongestValueUpgrade()}; }
+            get
+            {
+                return new List<IUpgrade>
+                {
+                    new EmbeddedXmlUpgrade(_settings.EmbeddedXmlUpgradeDocumentsQuery),
+                    new LongestValueUpgrade()
+                };
+            }
         }
 
         public void Initialize(SqlConnection repositoryConnection)
