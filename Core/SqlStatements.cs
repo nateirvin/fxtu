@@ -2,6 +2,11 @@
 {
     public static class SqlStatements
     {
+        public static string GetEmbeddedXmlDocumentIds
+        {
+            get { return "SELECT DISTINCT DocumentID FROM dbo.DocumentVariables WHERE VariableValue LIKE '%<%>%'"; }
+        }
+
         // ReSharper disable InconsistentNaming
         public const string usp_GetExtendedProperties = "dbo.usp_GetExtendedProperties";
         public const string usp_ImportDocumentInfos = "dbo.usp_ImportDocumentInfos";

@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using XmlToTable.Console.Properties;
 using XmlToTable.Core;
+using XmlToTable.Core.Upgrades;
 
 namespace XmlToTable.Console
 {
@@ -20,6 +23,7 @@ namespace XmlToTable.Console
         private const int ERROR_INVALID_DATA = 13;
         private const int ERROR_READ_FAULT = 30;
         private const int ERROR_APP_INIT_FAILURE = 575;
+        private const int ERROR_CANCELLED = 1223;
 
         private static bool? _continueShredding;
 
@@ -40,11 +44,19 @@ namespace XmlToTable.Console
                 }
                 else
                 {
+                    programSettings.SourceSpecification = GetSpecification(programSettings.SourceSpecification);
                     programSettings.UpgradeDocumentsQuery = GetSpecification(programSettings.UpgradeDocumentsQuery);
+                    
                     if (!HandleScriptOutputFlow(programSettings))
                     {
-                        programSettings.SourceSpecification = GetSpecification(programSettings.SourceSpecification);
-                        HandleShredding(programSettings);
+                        if (!NeedFurtherUpgradeInput(programSettings))
+                        {
+                            HandleShredding(programSettings);
+                        }
+                        else
+                        {
+                            exitCode = ERROR_CANCELLED;
+                        }
                     }
                 }
             }
@@ -175,6 +187,40 @@ namespace XmlToTable.Console
         private static bool IsFile(string sourceSpecification)
         {
             return File.Exists(sourceSpecification);
+        }
+
+        private static bool NeedFurtherUpgradeInput(CommandLineOptions programSettings)
+        {
+            if (string.IsNullOrWhiteSpace(programSettings.UpgradeDocumentsQuery))
+            {
+                using (SqlConnection connection = new SqlConnection(programSettings.GetRepositoryConnectionAddress()))
+                {
+                    connection.Open();
+
+                    EmbeddedXmlUpgrade upgrade = new EmbeddedXmlUpgrade(programSettings.UpgradeDocumentsQuery);
+                    if (upgrade.IsRequired(connection))
+                    {
+                        DialogResult response = MessageBox.Show(
+                            "Documents that contained escaped/embedded XML need to be re-processed. Do you want XML to Table to identify these documents? " +
+                            "(This may result in documents being re-processed unnecessarily and could take a very long time.) " +
+                            "Click No to supply your own query using the 'redoDocumentsQuery' command line option.",
+                            "XML to Table", 
+                            MessageBoxButtons.YesNo, 
+                            MessageBoxIcon.Question,
+                            MessageBoxDefaultButton.Button2);
+                        if (response == DialogResult.Yes)
+                        {
+                            programSettings.UpgradeDocumentsQuery = SqlStatements.GetEmbeddedXmlDocumentIds;
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 
         private static void HandleShredding(CommandLineOptions programSettings)
