@@ -60,6 +60,7 @@
     </Compile>
     <Compile Include="Schema.cs" />
     <Compile Include="ShreddingEngineSettings.cs" />
+    <Compile Include="ShreddingException.cs" />
     <Compile Include="SqlBuilder.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
