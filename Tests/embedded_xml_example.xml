@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE xgdresponse SYSTEM 'xgdresponse.dtd'>
+<xgdresponse version='1.0'>
+	<transid>10677211628</transid>
+	<errorcode>0</errorcode>
+	<response>
+		<result>
+			<element>3226</element>
+			<errorcode>0</errorcode>
+			<value>&lt;Contact&gt;&lt;Names&gt;&lt;Name type=&quot;C&quot;&gt;&lt;First&gt;Billy&lt;/First&gt;&lt;Last&gt;Bob&lt;/Last&gt;&lt;/Name&gt;&lt;/Names&gt;&lt;Addresses&gt;&lt;Address validation=&quot;1&quot; RBDI=&quot;R&quot; vacancy=&quot;N&quot; score=&quot;19&quot;&gt;&lt;Street verified=&quot;1503 MAPLE LN&quot;&gt;1503 Maple Ln&lt;/Street&gt;&lt;City verified=&quot;ARLINGTON&quot;&gt;Arlington&lt;/City&gt;&lt;ST verified=&quot;TX&quot;&gt;AK&lt;/ST&gt;&lt;Postal verified=&quot;00000-4619&quot;&gt;00000&lt;/Postal&gt;&lt;/Address&gt;&lt;/Addresses&gt;&lt;Phones&gt;&lt;Phone validation=&quot;1&quot; mobile=&quot;Y&quot; DAConnected=&quot;U&quot; BPI=&quot;U&quot; active=&quot;1&quot; score=&quot;50&quot;&gt;8015555555&lt;/Phone&gt;&lt;/Phones&gt;&lt;eMailAddresses&gt;&lt;eMail validation=&quot;1&quot; reason=&quot;0&quot; score=&quot;70&quot;&gt;not-real@yahoo.com&lt;/eMail&gt;&lt;/eMailAddresses&gt;&lt;IPAddresses /&gt;&lt;/Contact&gt;</value>
+		</result>
+		<result>
+			<element>1320</element>
+			<errorcode>0</errorcode>
+			<value>Y,U,A7,W</value>
+		</result>
+	</response>
+</xgdresponse>
