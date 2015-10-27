@@ -30,7 +30,7 @@ namespace XmlToTable.Core.Upgrades
                 }
                 if (string.IsNullOrWhiteSpace(_documentQuery))
                 {
-                    throw new InvalidOperationException("Missing or invalid query to identify documents.");
+                    throw new InvalidOperationException("Missing or invalid document query.");
                 }
                 return Resources.EmbeddedXmlUpgradeScript.Replace("/* QUERY */", _documentQuery);
             }

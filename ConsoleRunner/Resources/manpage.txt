@@ -73,7 +73,8 @@ USAGE:
                Optional.
                aka -upgradeScriptFilename=<file>
 
--i=<spec>      Identify documents that need to be reprocessed (query or file containing query)
+-i=<spec>      Identify documents that need to be reprocessed.
+               <spec> is query or file containing query.
                Optional except in certain upgrade scenarios.
                aka -redoDocumentsQuery=<spec>
             
