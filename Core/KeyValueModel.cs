@@ -94,9 +94,8 @@ namespace XmlToTable.Core
             List<XmlNode> childNodesCollection = node.GetNestedChildren();
             Dictionary<string, int> elementSequences = new Dictionary<string, int>();
 
-            for (int i = 0; i < childNodesCollection.Count; i++)
+            foreach (XmlNode childNode in childNodesCollection)
             {
-                XmlNode childNode = childNodesCollection[i];
                 bool isValueElement = !childNode.HasNestedNodes();
 
                 if (!isValueElement || !childNode.IsEmpty())
