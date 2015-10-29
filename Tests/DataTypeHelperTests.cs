@@ -84,5 +84,74 @@ namespace Tests
             Assert.IsInstanceOf<Guid>(actual);
             Assert.AreEqual(expected, actual);
         }
+
+        [TestCase("+131")]
+        [TestCase(" +  131 ")]
+        [TestCase("+131    ")]
+        public void SuggestType_ReturnsInt_ForPreSignedValue(string input)
+        {
+            SqlDbType? actual = DataTypeHelper.SuggestType(input);
+
+            Assert.True(actual.HasValue);
+            Assert.AreEqual(SqlDbType.Int, actual.Value);
+        }
+
+        [TestCase("+131")]
+        [TestCase(" +  131 ")]
+        [TestCase("+131    ")]
+        public void ConvertTo_ReturnsIntValue_ForPreSignedValue(string input)
+        {
+            object actual = _classUnderTest.ConvertTo(typeof(int), input);
+
+            Assert.AreEqual(131, actual);
+        }
+
+        [TestCase("+ 131.00")]
+        [TestCase("+131,000.77")]
+        public void SuggestType_ReturnsFloat_ForPreSignedValue(string input)
+        {
+            SqlDbType? actual = DataTypeHelper.SuggestType(input);
+
+            Assert.True(actual.HasValue);
+            Assert.AreEqual(SqlDbType.Float, actual.Value);
+        }
+
+        [Test]
+        public void ConvertTo_ReturnsNumericlValue_ForPreSignedValue()
+        {
+            object actual = _classUnderTest.ConvertTo(typeof(float), "+ 131.00");
+
+            Assert.AreEqual(131F, actual);
+        }
+
+        [Test]
+        public void ConvertTo_ReturnsNumericValue_ForPreSignedValue()
+        {
+            object actual = _classUnderTest.ConvertTo(typeof(float), "+131,000.77");
+
+            Assert.AreEqual(131000.77F, actual);
+        }
+
+        [TestCase("131 +")]
+        [TestCase("   131 +")]
+        [TestCase("131 +   ")]
+        [TestCase("131.00 +")]
+        [TestCase("131,000.77 +")]
+        public void SuggestType_ReturnsText_ForPostSignedValue(string input)
+        {
+            SqlDbType? actual = DataTypeHelper.SuggestType(input);
+
+            Assert.True(actual.HasValue);
+            Assert.AreEqual(SqlDbType.NVarChar, actual.Value);
+        }
+
+        [Test]
+        public void SuggestType_ReturnsText_ForAlphaNumericString()
+        {
+            SqlDbType? actual = DataTypeHelper.SuggestType("Hi I'm 123.45 days old.");
+
+            Assert.True(actual.HasValue);
+            Assert.AreEqual(SqlDbType.NVarChar, actual.Value);
+        }
     }
 }

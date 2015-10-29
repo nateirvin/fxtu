@@ -52,6 +52,7 @@
     <Compile Include="InvalidNameException.cs" />
     <Compile Include="AdapterSettings.cs" />
     <Compile Include="NameHandler.cs" />
+    <Compile Include="Parser.cs" />
     <Compile Include="PersistenceState.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
