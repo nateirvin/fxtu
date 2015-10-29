@@ -44,7 +44,7 @@ namespace XmlToTable.Core
             _sourceConnection.Open();
             _repositoryConnection.Open();
 
-            CreateRepositoryIfNecessary();
+            CreateOrUpgradeRepositoryIfNecessary();
             ValidateSettings();
             UpdateImportList();
             SetPriorityProcessing();
@@ -53,7 +53,7 @@ namespace XmlToTable.Core
             EngineState = ComponentState.Ready;
         }
 
-        private void CreateRepositoryIfNecessary()
+        private void CreateOrUpgradeRepositoryIfNecessary()
         {
             string repositoryName = _settings.RepositoryName;
             int databaseId = _repositoryConnection.GetInt32(SqlStatements.GetDatabaseId, new SqlParameter("@DatabaseName", repositoryName));

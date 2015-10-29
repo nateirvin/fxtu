@@ -47,17 +47,17 @@ namespace XmlToTable.Console
                 {
                     programSettings.SourceSpecification = GetSpecification(programSettings.SourceSpecification);
                     programSettings.UpgradeDocumentsQuery = GetSpecification(programSettings.UpgradeDocumentsQuery);
-                    
-                    if (!HandleScriptOutputFlow(programSettings))
+
+                    if (!NeedFurtherUpgradeInput(programSettings))
                     {
-                        if (!NeedFurtherUpgradeInput(programSettings))
+                        if (!HandleScriptOutputFlow(programSettings))
                         {
                             HandleShredding(programSettings);
                         }
-                        else
-                        {
-                            exitCode = ERROR_CANCELLED;
-                        }
+                    }
+                    else
+                    {
+                        exitCode = ERROR_CANCELLED;
                     }
                 }
             }
