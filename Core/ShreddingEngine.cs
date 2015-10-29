@@ -4,9 +4,11 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using XmlToTable.Core.Properties;
+using XmlToTable.Core.Upgrades;
 
 namespace XmlToTable.Core
 {
@@ -61,7 +63,7 @@ namespace XmlToTable.Core
             if (databaseId == 0)
             {
                 ShowProgress(0, "Creating database");
-                _adapterContext.CreateDatabase(_repositoryConnection);
+                CreateDatabase(_repositoryConnection);
             }
 
             _repositoryConnection.SwitchDatabaseContext(repositoryName);
@@ -69,7 +71,70 @@ namespace XmlToTable.Core
             if (_adapterContext.RequiresUpgrade(_repositoryConnection))
             {
                 ShowProgress(0, "Upgrading database");
-                _adapterContext.UpgradeDatabase(_repositoryConnection);
+                UpgradeDatabase(_repositoryConnection);
+            }
+        }
+
+        private void CreateDatabase(SqlConnection repositoryConnection)
+        {
+            repositoryConnection.ExecuteStatement(SqlBuilder.BuildCreateDatabaseStatement(_settings.RepositoryName));
+            repositoryConnection.SwitchDatabaseContext(_settings.RepositoryName);
+            ExecuteObjectTransaction(repositoryConnection, _adapterContext.DatabaseCreationScript, 15);
+        }
+
+        private void UpgradeDatabase(SqlConnection repositoryConnection)
+        {
+            StringBuilder batch = new StringBuilder();
+            foreach (IUpgrade upgrade in _adapterContext.Upgrades)
+            {
+                if (upgrade.IsRequired(repositoryConnection))
+                {
+                    batch.AppendLine(upgrade.DatabaseScript);
+                    batch.AppendLine(SqlServer.DefaultBatchSeparator);
+                }
+            }
+
+            if (batch.Length > 0)
+            {
+                ExecuteObjectTransaction(repositoryConnection, batch.ToString(), 300);
+            }
+        }
+
+        private void ExecuteObjectTransaction(SqlConnection repositoryConnection, string script, int timeout)
+        {
+            SqlTransaction transaction = null;
+            try
+            {
+                string[] statements = script.ToSqlStatements();
+
+                transaction = repositoryConnection.BeginTransaction();
+
+                for (int i = 0; i < statements.Length; i++)
+                {
+                    string statement = statements[i];
+                    ShowItemProgress("Executing action", i + 1, statements.Length);
+
+                    if (!string.IsNullOrWhiteSpace(statement))
+                    {
+                        using (SqlCommand objectModificationStatement = new SqlCommand(statement))
+                        {
+                            objectModificationStatement.Connection = repositoryConnection;
+                            objectModificationStatement.Transaction = transaction;
+                            objectModificationStatement.CommandType = CommandType.Text;
+                            objectModificationStatement.CommandTimeout = timeout;
+                            objectModificationStatement.ExecuteNonQuery();
+                        }
+                    }
+                }
+
+                transaction.Commit();
+            }
+            finally
+            {
+                if (transaction != null)
+                {
+                    transaction.Dispose();
+                }
             }
         }
 
@@ -248,13 +313,7 @@ namespace XmlToTable.Core
                     while (batchItemReader.Read())
                     {
                         processedCount++;
-                        int progressValue = Math.Max(1, (int) ((processedCount / (decimal)documentIds.Count))*100);
-                        if (progressValue == 100 && processedCount != documentIds.Count)
-                        {
-                            progressValue = 99;
-                        }
-                        string message = string.Format("Importing {0} of {1}", processedCount, documentIds.Count);
-                        ShowProgress(progressValue, message);
+                        ShowItemProgress("Importing", processedCount, documentIds.Count);
 
                         int documentID = Convert.ToInt32(batchItemReader[Columns.DocumentId]);
                         string providerName = batchItemReader[Columns.ProviderName].ToString();
@@ -286,6 +345,19 @@ namespace XmlToTable.Core
                     }
                 }
             }
+        }
+
+        private void ShowItemProgress(string actionName, int itemNumber, int totalItems)
+        {
+            int progressPercentage = Math.Max(1, (int)((itemNumber / (decimal)totalItems)) * 100);
+            if (progressPercentage == 100 && itemNumber != totalItems)
+            {
+                progressPercentage = 99;
+            }
+            
+            string message = string.Format("{0} {1} of {2}", actionName, itemNumber, totalItems);
+
+            ShowProgress(progressPercentage, message);
         }
 
         private void CommitChanges(List<int> documentIds)
