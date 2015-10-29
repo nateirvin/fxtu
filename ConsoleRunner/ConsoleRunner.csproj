@@ -42,6 +42,8 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\GlobalAssemblyInfo.cs">
@@ -60,6 +62,10 @@
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{28ab5b8f-1ced-4ca7-a069-6b3b4d48abd6}</Project>
       <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SystemExtensions\SystemExtensions.csproj">
+      <Project>{08e9eff6-7132-464e-82d5-ea07b3b8ad0e}</Project>
+      <Name>SystemExtensions</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

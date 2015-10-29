@@ -7,6 +7,11 @@ namespace System.Data
     {
         public static bool IsSelectQuery(this string sourceSpecification)
         {
+            if (sourceSpecification == null)
+            {
+                return false;
+            }
+
             return Regex.IsMatch(sourceSpecification, "SELECT.+?FROM", RegexOptions.IgnoreCase | RegexOptions.Singleline);
         }
 

@@ -98,6 +98,7 @@ namespace XmlToTable.Core
                 }
                 catch
                 {
+                    return false;
                 }
             }
 

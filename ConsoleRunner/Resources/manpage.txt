@@ -72,6 +72,11 @@ USAGE:
 -m=<file>      Generate database upgrade script (no XML processing)
                Optional.
                aka -upgradeScriptFilename=<file>
+
+-i=<spec>      Identify documents that need to be reprocessed.
+               <spec> is query or file containing query.
+               Optional except in certain upgrade scenarios.
+               aka -redoDocumentsQuery=<spec>
             
 -p=<name>      The content provider to process.
                Optional. If omitted, will process all providers.

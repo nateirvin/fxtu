@@ -30,7 +30,7 @@ namespace XmlToTable.Core
                     }
                     else
                     {
-                        _databaseAdapter = new KeyValueModel();
+                        _databaseAdapter = new KeyValueModel(_settings);
                     }
                 }
                 return _databaseAdapter;
@@ -39,13 +39,6 @@ namespace XmlToTable.Core
             {
                 _databaseAdapter = value;
             }
-        }
-
-        public void CreateDatabase(SqlConnection repositoryConnection)
-        {
-            repositoryConnection.ExecuteStatement(SqlBuilder.BuildCreateDatabaseStatement(_settings.RepositoryName));
-            repositoryConnection.SwitchDatabaseContext(_settings.RepositoryName);
-            ExecuteObjectTransaction(repositoryConnection, DatabaseCreationScript, 15);
         }
 
         public string GenerateDatabaseCreationScript()
@@ -89,57 +82,6 @@ namespace XmlToTable.Core
             }
 
             return script.ToString();
-        }
-
-        public void UpgradeDatabase(SqlConnection repositoryConnection)
-        {
-            StringBuilder batch = new StringBuilder();
-            foreach (IUpgrade upgrade in Upgrades)
-            {
-                if (upgrade.IsRequired(repositoryConnection))
-                {
-                    batch.AppendLine(upgrade.DatabaseScript);
-                    batch.AppendLine(SqlServer.DefaultBatchSeparator);
-                }
-            }
-
-            if (batch.Length > 0)
-            {
-                ExecuteObjectTransaction(repositoryConnection, batch.ToString(), 300);
-            }
-        }
-
-        private static void ExecuteObjectTransaction(SqlConnection repositoryConnection, string script, int timeout)
-        {
-            SqlTransaction transaction = null;
-            try
-            {
-                transaction = repositoryConnection.BeginTransaction();
-
-                foreach (string statement in script.ToSqlStatements())
-                {
-                    if (!string.IsNullOrWhiteSpace(statement))
-                    {
-                        using (SqlCommand objectModificationStatement = new SqlCommand(statement))
-                        {
-                            objectModificationStatement.Connection = repositoryConnection;
-                            objectModificationStatement.Transaction = transaction;
-                            objectModificationStatement.CommandType = CommandType.Text;
-                            objectModificationStatement.CommandTimeout = timeout;
-                            objectModificationStatement.ExecuteNonQuery();
-                        }
-                    }
-                }
-
-                transaction.Commit();
-            }
-            finally
-            {
-                if (transaction != null)
-                {
-                    transaction.Dispose();
-                }
-            }
         }
 
         public IEnumerable<IUpgrade> Upgrades

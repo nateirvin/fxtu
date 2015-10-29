@@ -8,7 +8,7 @@ namespace System.Xml
     {
         private const string XmlNullKeyword = "nil";
 
-        public static XmlDocument ToXmlDocument(this string rawXml)
+        public static XmlDocument ToXmlDocument(this string rawXml, bool promoteEmbeddedXml = true)
         {
             const string xmlDeclarationStem = "<?xml version=";
             const string xmlDeclaration = xmlDeclarationStem + "\"1.0\" ?>";
@@ -26,7 +26,49 @@ namespace System.Xml
             XmlDocument xmlDocument = new XmlDocument();
             xmlDocument.LoadXml(rawXml);
 
+            if (promoteEmbeddedXml)
+            {
+                PromoteEmbeddedXml(xmlDocument.DocumentElement);
+            }
+
             return xmlDocument;
+        }
+
+        private static void PromoteEmbeddedXml(XmlNode node)
+        {
+            foreach (XmlNode childNode in node.GetNestedChildren())
+            {
+                if (childNode.HasNestedNodes())
+                {
+                    PromoteEmbeddedXml(childNode);
+                }
+                else
+                {
+                    if (IsXml(childNode.InnerText))
+                    {
+                        childNode.InnerXml = childNode.InnerText;
+                    }
+                }
+            }
+        }
+
+        public static bool IsXml(this string content)
+        {
+            if (Regex.IsMatch(content, "<.+?>", RegexOptions.Singleline))
+            {
+                try
+                {
+                    XmlDocument tempDocument = new XmlDocument();
+                    tempDocument.LoadXml(content);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+            return false;
         }
 
         public static List<XmlNode> GetNestedChildren(this XmlNode node)
