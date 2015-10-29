@@ -61,24 +61,31 @@ namespace XmlToTable.Console.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Documents that contained escaped/embedded XML need to be re-processed. Do you want {0} to identify these documents? (This may result in documents being re-processed unnecessarily and could take a very long time.) Click No to supply your own query using the &apos;{1}&apos; command line option..
+        /// </summary>
+        internal static string UpgradeQueryPromptTemplate {
+            get {
+                return ResourceManager.GetString("UpgradeQueryPromptTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to USAGE:
         ///
-        ///-help			Display this help screen
+        ///-help          Display this help screen
         ///
-        ///			OR
+        ///         OR
         ///
-        ///-sc=&lt;connStr&gt;	Connection string for source database.
-        ///				Required unless generating database creation script.
-        ///				aka -sourceConnection=&lt;connStr&gt;				
-        ///				
-        ///-ss=&lt;spec&gt;		Source database object or SQL query (or file containing one of those).
-        ///				Required unless generating database creation script.
-        ///				aka -source=&lt;spec&gt;
-        ///				EXAMPLES: 
-        ///					-source=&quot;dbo.Table&quot;
-        ///					-source=&quot;SELECT * FROM dbo.Table&quot;
-        ///					-source=&quot;tablename.txt&quot;
-        ///					-source=&quot;c:\que [rest of string was truncated]&quot;;.
+        ///-sc=&lt;connStr&gt;  Connection string for source database.
+        ///               Required unless generating database creation script.
+        ///               aka -sourceConnection=&lt;connStr&gt;            
+        ///            
+        ///-ss=&lt;spec&gt;     Source object or query (or file containing one of those).
+        ///               Required unless generating database creation script.
+        ///               aka -source=&lt;spec&gt;
+        ///               EXAMPLES: 
+        ///                -source=&quot;dbo.Table&quot;
+        ///     [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string UsageMessage {
             get {

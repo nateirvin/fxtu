@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Xml;
+using XmlToTable.Core.Properties;
 
 namespace XmlToTable.Core
 {
@@ -133,7 +134,7 @@ namespace XmlToTable.Core
             bool shouldImport = false;
             if (Debugger.IsAttached)
             {
-                DialogResult response = MessageBox.Show("Do you want to import documents at this time?", "XML to Table", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                DialogResult response = MessageBox.Show("Do you want to import documents at this time?", Resources.ProgramName, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
                 if (response == DialogResult.Yes)
                 {
                     shouldImport = true;

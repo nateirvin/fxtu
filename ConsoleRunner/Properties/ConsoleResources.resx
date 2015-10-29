@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="UpgradeQueryPromptTemplate" xml:space="preserve">
+    <value>Documents that contained escaped/embedded XML need to be re-processed. Do you want {0} to identify these documents? (This may result in documents being re-processed unnecessarily and could take a very long time.) Click No to supply your own query using the '{1}' command line option.</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="UsageMessage" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\manpage.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>

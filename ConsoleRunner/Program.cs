@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using XmlToTable.Console.Properties;
 using XmlToTable.Core;
+using XmlToTable.Core.Properties;
 using XmlToTable.Core.Upgrades;
 
 namespace XmlToTable.Console
@@ -87,7 +88,7 @@ namespace XmlToTable.Console
 
         private static void PrintHeader()
         {
-            System.Console.WriteLine("XML to Table");
+            System.Console.WriteLine(Resources.ProgramName);
             System.Console.WriteLine("Imports and shreds XML files to a SQL Server database");
             System.Console.WriteLine();
         }
@@ -200,14 +201,8 @@ namespace XmlToTable.Console
                     EmbeddedXmlUpgrade upgrade = new EmbeddedXmlUpgrade(programSettings.UpgradeDocumentsQuery);
                     if (upgrade.IsRequired(connection))
                     {
-                        DialogResult response = MessageBox.Show(
-                            "Documents that contained escaped/embedded XML need to be re-processed. Do you want XML to Table to identify these documents? " +
-                            "(This may result in documents being re-processed unnecessarily and could take a very long time.) " +
-                            "Click No to supply your own query using the 'redoDocumentsQuery' command line option.",
-                            "XML to Table", 
-                            MessageBoxButtons.YesNo, 
-                            MessageBoxIcon.Question,
-                            MessageBoxDefaultButton.Button2);
+                        string message = string.Format(ConsoleResources.UpgradeQueryPromptTemplate, Resources.ProgramName, ShreddingEngineSettings.UpgradeDocumentsQueryKeyName);
+                        DialogResult response = MessageBox.Show(message, Resources.ProgramName, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
                         if (response == DialogResult.Yes)
                         {
                             programSettings.UpgradeDocumentsQuery = SqlStatements.GetEmbeddedXmlDocumentIds;
@@ -306,7 +301,7 @@ namespace XmlToTable.Console
             if (Debugger.IsAttached)
             {
                 System.Console.WriteLine();
-                System.Console.Write("Press any key to exit...");
+                System.Console.Write(@"Press any key to exit...");
                 System.Console.ReadKey();
             }
 

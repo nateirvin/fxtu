@@ -15,6 +15,7 @@ namespace XmlToTable.Core
         protected const string SourceConnectionShortcutName = "sc";
         protected const string SourceSpecificationKeyName = "source";
         protected const string SourceSpecificationShortcutName = "ss";
+        public const string UpgradeDocumentsQueryKeyName = "redoDocumentsQuery";
 
         private string _repositoryHostName;
         private string _repositoryName;
@@ -99,7 +100,7 @@ namespace XmlToTable.Core
         [ConfigurableProperty("maximumNameLength", DefaultValue = int.MaxValue, ShortcutName = "l")]
         public virtual int MaximumNameLength { get; set; }
 
-        [ConfigurableProperty("redoDocumentsQuery", ShortcutName = "i")]
+        [ConfigurableProperty(UpgradeDocumentsQueryKeyName, ShortcutName = "i")]
         public string UpgradeDocumentsQuery { get; set; }
 
         public TooLongNameBehavior NameLengthEnforcementStyle
