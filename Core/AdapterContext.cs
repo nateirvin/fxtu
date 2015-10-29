@@ -30,7 +30,7 @@ namespace XmlToTable.Core
                     }
                     else
                     {
-                        _databaseAdapter = new KeyValueModel();
+                        _databaseAdapter = new KeyValueModel(_settings);
                     }
                 }
                 return _databaseAdapter;

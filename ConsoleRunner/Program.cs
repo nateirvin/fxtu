@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
@@ -197,6 +198,8 @@ namespace XmlToTable.Console
                 using (SqlConnection connection = new SqlConnection(programSettings.GetRepositoryConnectionAddress()))
                 {
                     connection.Open();
+
+                    connection.SwitchDatabaseContext(programSettings.RepositoryName);
 
                     EmbeddedXmlUpgrade upgrade = new EmbeddedXmlUpgrade(programSettings.UpgradeDocumentsQuery);
                     if (upgrade.IsRequired(connection))

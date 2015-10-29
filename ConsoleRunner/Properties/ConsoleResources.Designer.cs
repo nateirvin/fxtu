@@ -61,7 +61,9 @@ namespace XmlToTable.Console.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Documents that contained escaped/embedded XML need to be re-processed. Do you want {0} to identify these documents? (This may result in documents being re-processed unnecessarily and could take a very long time.) Click No to supply your own query using the &apos;{1}&apos; command line option..
+        ///   Looks up a localized string similar to Documents that contained escaped/embedded XML need to be re-processed. Do you want {0} to identify these documents? (This may result in documents being re-processed unnecessarily and could take a very long time.) 
+        ///
+        ///Click No to supply your own query using the &apos;{1}&apos; option..
         /// </summary>
         internal static string UpgradeQueryPromptTemplate {
             get {
