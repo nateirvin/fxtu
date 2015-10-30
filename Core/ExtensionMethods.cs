@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Reflection;
 
 namespace XmlToTable.Core
 {
@@ -56,27 +55,13 @@ namespace XmlToTable.Core
                 throw new ArgumentNullException("value");
             }
 
-            MethodInfo methodInfo = GetPublicStaticMethod<T>("TryParse");
-            if (methodInfo != null)
+            Parser parser = Parser.GetParser<T>();
+            if (parser != null)
             {
-                T receiver = default(T);
-                object[] parameters = { value.ToString(), receiver };
-                object returnValue = methodInfo.Invoke(null, parameters);
-                return (bool)returnValue;
+                return parser.CanParse(value.ToString());
             }
 
             return CheckTypeSlowly<T>(value);
-        }
-
-        private static MethodInfo GetPublicStaticMethod<T>(string methodName)
-        {
-            return GetPublicStaticMethod(typeof (T), methodName);
-        }
-
-        public static MethodInfo GetPublicStaticMethod(this Type type, string methodName)
-        {
-            MethodInfo[] publicStaticMethods = type.GetMethods(BindingFlags.Static | BindingFlags.Public);
-            return publicStaticMethods.FirstOrDefault(x => x.Name == methodName);
         }
 
         private static bool CheckTypeSlowly<T>(object value)

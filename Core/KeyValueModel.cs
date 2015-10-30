@@ -46,7 +46,8 @@ namespace XmlToTable.Core
                 return new List<IUpgrade>
                 {
                     new EmbeddedXmlUpgrade(_settings.UpgradeDocumentsQuery),
-                    new LongestValueUpgrade()
+                    new LongestValueUpgrade(),
+                    new NumberToTextUpgrade()
                 };
             }
         }

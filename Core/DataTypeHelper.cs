@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Data;
-using System.Reflection;
 
 namespace XmlToTable.Core
 {
@@ -34,7 +33,7 @@ namespace XmlToTable.Core
             return currentType;
         }
 
-        private static SqlDbType? SuggestType(object value)
+        public static SqlDbType? SuggestType(object value)
         {
             SqlDbType? suggestedType = null;
 
@@ -54,13 +53,16 @@ namespace XmlToTable.Core
                     else if (value.CanBe<decimal>())
                     {
                         suggestedType = SqlDbType.Float;
-                        if (value.CanBe<long>())
+                        if (!value.ToString().Contains("."))
                         {
-                            suggestedType = SqlDbType.BigInt;
-                        }
-                        if (value.CanBe<int>())
-                        {
-                            suggestedType = SqlDbType.Int;
+                            if (value.CanBe<long>())
+                            {
+                                suggestedType = SqlDbType.BigInt;
+                            }
+                            if (value.CanBe<int>())
+                            {
+                                suggestedType = SqlDbType.Int;
+                            }
                         }
                     }
                     else if (value.CanBe<DateTime>())
@@ -126,10 +128,10 @@ namespace XmlToTable.Core
             }
             else
             {
-                MethodInfo methodInfo = destinationType.GetPublicStaticMethod("Parse");
-                if (methodInfo != null)
+                Parser parser = Parser.GetParser(destinationType);
+                if (parser != null)
                 {
-                    return methodInfo.Invoke(null, new object[] {rawValue});
+                    return parser.Parse(rawValue);
                 }
             }
 
