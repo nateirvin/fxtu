@@ -61,6 +61,7 @@
     <Compile Include="ExtensionMethodTests.cs" />
     <Compile Include="NameHandlerTests.cs" />
     <Compile Include="ShreddingEngineTests.cs" />
+    <Compile Include="SqlBuilderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">
