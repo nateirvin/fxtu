@@ -127,6 +127,19 @@
   <data name="LongestValueLengthUpgradeScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Upgrade_LongestValueLength.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="NumberToTextCorrectionStatement" xml:space="preserve">
+    <value>UPDATE dbo.Variables
+	SET DataKind = 'text'
+	WHERE VariableID IN
+	(
+		SELECT Variables.VariableID
+		FROM dbo.Variables
+			JOIN dbo.DocumentVariables
+				ON Variables.VariableID = DocumentVariables.VariableID
+		WHERE DataKind = 'number'
+			AND VariableValue LIKE '%+'
+	)</value>
+  </data>
   <data name="ProgramName" xml:space="preserve">
     <value>XML to Table</value>
   </data>

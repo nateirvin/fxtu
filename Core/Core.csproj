@@ -72,6 +72,7 @@
     <Compile Include="Upgrades\EmbeddedXmlUpgrade.cs" />
     <Compile Include="Upgrades\IUpgrade.cs" />
     <Compile Include="Upgrades\LongestValueUpgrade.cs" />
+    <Compile Include="Upgrades\NumberToTextUpgrade.cs" />
     <Compile Include="Variable.cs" />
   </ItemGroup>
   <ItemGroup>

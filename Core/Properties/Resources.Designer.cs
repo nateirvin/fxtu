@@ -151,6 +151,25 @@ namespace XmlToTable.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to UPDATE dbo.Variables
+        ///	SET DataKind = &apos;text&apos;
+        ///	WHERE VariableID IN
+        ///	(
+        ///		SELECT Variables.VariableID
+        ///		FROM dbo.Variables
+        ///			JOIN dbo.DocumentVariables
+        ///				ON Variables.VariableID = DocumentVariables.VariableID
+        ///		WHERE DataKind = &apos;number&apos;
+        ///			AND VariableValue LIKE &apos;%+&apos;
+        ///	).
+        /// </summary>
+        internal static string NumberToTextCorrectionStatement {
+            get {
+                return ResourceManager.GetString("NumberToTextCorrectionStatement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to XML to Table.
         /// </summary>
         public static string ProgramName {
