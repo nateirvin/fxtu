@@ -36,7 +36,7 @@ namespace XmlToTable.Core.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("XmlToTable.Core.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace XmlToTable.Core.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -84,7 +84,7 @@ namespace XmlToTable.Core.Properties {
         ///			HAVING COUNT(DocumentVariables.DocumentID) = 0
         /// [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string EmbeddedXmlUpgradeScript {
+        public static string EmbeddedXmlUpgradeScript {
             get {
                 return ResourceManager.GetString("EmbeddedXmlUpgradeScript", resourceCulture);
             }
@@ -110,7 +110,7 @@ namespace XmlToTable.Core.Properties {
         ///	[TableName] [sysname] NOT NULL,
         ///	[Column [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string HierarchicalDatabaseCreationScript {
+        public static string HierarchicalDatabaseCreationScript {
             get {
                 return ResourceManager.GetString("HierarchicalDatabaseCreationScript", resourceCulture);
             }
@@ -144,7 +144,7 @@ namespace XmlToTable.Core.Properties {
         ///	USING @Updates AS src
         ///	ON src.VariableName = dest [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string LongestValueLengthUpgradeScript {
+        public static string LongestValueLengthUpgradeScript {
             get {
                 return ResourceManager.GetString("LongestValueLengthUpgradeScript", resourceCulture);
             }
@@ -161,9 +161,21 @@ namespace XmlToTable.Core.Properties {
         ///				ON Variables.VariableID = DocumentVariables.VariableID
         ///		WHERE DataKind = &apos;number&apos;
         ///			AND VariableValue LIKE &apos;%+&apos;
-        ///	).
+        ///	)
+        ///GO
+        ///
+        ///CREATE PROCEDURE dbo.usp_GetExtendedProperties
+        ///AS
+        ///BEGIN
+        ///
+        ///	SELECT name, value 
+        ///	FROM sys.extended_properties
+        ///	WHERE class_desc = &apos;DATABASE&apos;
+        ///
+        ///END
+        ///GO.
         /// </summary>
-        internal static string NumberToTextCorrectionStatement {
+        public static string NumberToTextCorrectionStatement {
             get {
                 return ResourceManager.GetString("NumberToTextCorrectionStatement", resourceCulture);
             }
@@ -196,7 +208,7 @@ namespace XmlToTable.Core.Properties {
         ///CREATE TABLE [dbo].[DocumentVariables](
         ///	[DocumentID [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string VerticalDatabaseCreationScript {
+        public static string VerticalDatabaseCreationScript {
             get {
                 return ResourceManager.GetString("VerticalDatabaseCreationScript", resourceCulture);
             }

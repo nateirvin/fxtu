@@ -138,7 +138,19 @@
 				ON Variables.VariableID = DocumentVariables.VariableID
 		WHERE DataKind = 'number'
 			AND VariableValue LIKE '%+'
-	)</value>
+	)
+GO
+
+CREATE PROCEDURE dbo.usp_GetExtendedProperties
+AS
+BEGIN
+
+	SELECT name, value 
+	FROM sys.extended_properties
+	WHERE class_desc = 'DATABASE'
+
+END
+GO</value>
   </data>
   <data name="ProgramName" xml:space="preserve">
     <value>XML to Table</value>
