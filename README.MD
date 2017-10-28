@@ -2,7 +2,7 @@
 
 For information on how to get started, please read the "Getting Started" section in the [Documentation](Documentation.md)!
 
-If you're already familiar with XML to Table, and want to know what's coming next, please read the [Future Features/Roadmap](Future Features_Roadmap.md) page.
+If you're already familiar with XML to Table, and want to know what's coming next, please read the [Future Features & Roadmap](Future Features_Roadmap.md) page.
 
 XML to Table is also available as a NuGet [package](https://www.nuget.org/packages/XmlToTable/)!
 
