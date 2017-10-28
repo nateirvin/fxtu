@@ -1,6 +1,6 @@
-# +Getting started+
+# Getting started
 
-## +Definitions+
+## Definitions
 
 ### Provider
 The provider is the entity that generated the specific XML document being processed.
@@ -29,7 +29,7 @@ When building a hierarchical model, XML to Table will create tables to correspon
 #### Key-Value
 When building a key-value model, XML to Table will insert unique XPaths into a "Variables" table, and values into a "DocumentVariables" table that links back to the DocumentID and the VariableID.
 
-# +Configuration+
+# Configuration
 
 XML to Table can be run by specifying all of the parameters in a config file, or by specifying all the parameters on the command line. A config file setup allows you to run XML to Table over and over again without having to create a cumbersome batch script, while a command-line run allows you to quickly shred some XML without a lengthy setup.
 
