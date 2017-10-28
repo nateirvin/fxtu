@@ -7,7 +7,7 @@ The provider is the entity that generated the specific XML document being proces
 
 ### Repository
 The repository is the database the shredded XML data will be stored in. It can either be created manually before the first run, or by the application's first run. The repository may also need to be upgraded from an older version, and the app will also do that as needed, or can generate a script to do that.
-For more info on how to get a database creation or upgrade script, see the [console help page](https://fxtu.codeplex.com/SourceControl/latest#master/ConsoleRunner/Resources/manpage.txt).
+For more info on how to get a database creation or upgrade script, see the [console help page](ConsoleRunner/Resources/manpage.txt).
 
 ### Source
 The source is the database the raw XML is stored in. When setting up XML to Table, you'll need to specify a source _connection_ and source _object_. The source _object_ can be a table, a view, or a query (or the name of a file that contains one of those). If the source object is a query, it cannot contain a common-table expression. You can also specify a source _timeout_.
@@ -33,9 +33,9 @@ When building a key-value model, XML to Table will insert unique XPaths into a "
 
 XML to Table can be run by specifying all of the parameters in a config file, or by specifying all the parameters on the command line. A config file setup allows you to run XML to Table over and over again without having to create a cumbersome batch script, while a command-line run allows you to quickly shred some XML without a lengthy setup.
 
-If your configuration file contains passwords or other sensitive data, be sure to [protect](https://msdn.microsoft.com/en-us/library/hh8x3tas(v=vs.100).aspx) the file before deploying it. A handy [script](https://fxtu.codeplex.com/SourceControl/latest#master/protect_config.bat) to do this is provided in the source (it takes the full path of the config file and the section to encrypt as arguments).
+If your configuration file contains passwords or other sensitive data, be sure to [protect](https://msdn.microsoft.com/en-us/library/hh8x3tas(v=vs.100).aspx) the file before deploying it. A handy [script](protect_config.bat) to do this is provided in the source (it takes the full path of the config file and the section to encrypt as arguments).
 
-For detail on how to set up a config file, please view the [Example.config](https://fxtu.codeplex.com/SourceControl/latest#master/ConsoleRunner/Example.config).
-For details on how to set up the command-line, please view the [console help page](https://fxtu.codeplex.com/SourceControl/latest#master/ConsoleRunner/Resources/manpage.txt).
+For detail on how to set up a config file, please view the [Example.config](ConsoleRunner/Example.config).
+For details on how to set up the command-line, please view the [console help page](ConsoleRunner/Resources/manpage.txt).
 
-## For further info, please see [Questions you might ask](Questions-you-might-ask).
+## For further info, please see [Questions you might ask](Questions-you-might-ask.md).
