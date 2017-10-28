@@ -6,7 +6,7 @@ If the application user does not have rights to create databases, or you just wa
 
 **-g=<file>**
 
-You can specify other options as needed - if run with just option, the script will use only default values. For more information on the command line, please read the [console help page](https://fxtu.codeplex.com/SourceControl/latest#master/ConsoleRunner/Resources/manpage.txt).
+You can specify other options as needed - if run with just option, the script will use only default values. For more information on the command line, please read the [console help page](ConsoleRunner/Resources/manpage.txt).
 
 
 ## **What permissions are needed?**
