@@ -20,7 +20,6 @@ namespace XmlToTable.Core
         private const string HasContentPropertyName = "HasContent";
         internal const string UseForeignKeysPropertyName = "UseForeignKeys";
         internal const string MaxNameLengthPropertyName = "MaxNameLength";
-        private const string DocumentsTableName = "DocumentInfos";
         private const string NameMappingTableName = "OriginalNames";
         private readonly List<string> _reservedColumns = new List<string> { Columns.DocumentId, Columns.Identity, Columns.ParentTableName, Columns.ParentID };
 
@@ -133,7 +132,7 @@ namespace XmlToTable.Core
                 schema.Tables.Add(table);
             }
 
-            _documentsTable = FindTable(SqlServer.DefaultSchemaName, DocumentsTableName);
+            _documentsTable = FindTable(SqlServer.DefaultSchemaName, SqlStatements.DocumentsTableName);
             _namesTable = FindTable(SqlServer.DefaultSchemaName, NameMappingTableName);
             _initialized = true;
         }
@@ -607,7 +606,7 @@ namespace XmlToTable.Core
                 if (relation.ObjectState == PersistenceState.NotCreated)
                 {
                     string parentTableName =
-                        relation.ParentTable.TableName == DocumentsTableName
+                        relation.ParentTable.TableName == SqlStatements.DocumentsTableName
                             ? GetQualifiedTableName(SqlServer.DefaultSchemaName, _documentsTable)
                             : GetQualifiedTableName(schemaName, relation.ParentTable);
 

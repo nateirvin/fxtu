@@ -8,6 +8,7 @@
         }
 
         // ReSharper disable InconsistentNaming
+        public const string DocumentsTableName = "DocumentInfos";
         public const string usp_GetExtendedProperties = "dbo.usp_GetExtendedProperties";
         public const string usp_ImportDocumentInfos = "dbo.usp_ImportDocumentInfos";
         public const string usp_SetPriority = "dbo.usp_SetPriority";
@@ -29,5 +30,6 @@
         {
             get { return "SELECT OBJECT_ID(@ObjectName);"; }
         }
+
     }
 }

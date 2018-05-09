@@ -222,7 +222,8 @@ namespace XmlToTable.Core
             {
                 ShowProgress(0, "Gathering documents");
                 DataTable documentInfos = _sourceAdapter.GetDocumentInfos();
-                _repositoryConnection.ExecuteProcedure(SqlStatements.usp_ImportDocumentInfos, new SqlParameter("@Items", documentInfos));
+                SqlParameter tableParameter = new SqlParameter("@Items", SqlDbType.Structured) {Value = documentInfos};
+                _repositoryConnection.ExecuteProcedure(SqlStatements.usp_ImportDocumentInfos, tableParameter);
             }
         }
 
