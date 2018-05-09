@@ -107,11 +107,12 @@ namespace XmlToTable.Core.Sources
                     string documentId = _idListEnumerator.Current;
                     string fullPath = Path.Combine(FolderRoot, documentId);
                     string xml = File.ReadAllText(fullPath);
+                    object xmlDoc = XmlParser.TryParseXml(xml);
                     return new DocumentContent
                     {
                         DocumentID = documentId,
                         ProviderName = DefaultProviderName,
-                        Xml = xml
+                        Content = xmlDoc
                     };
                 }
             }

@@ -312,18 +312,8 @@ namespace XmlToTable.Core
                 processedCount++;
                 ShowItemProgress("Importing", processedCount, documentIds.Count);
 
-                XmlDocument xmlDocument = null;
-                if (!string.IsNullOrWhiteSpace(documentInfo.Xml))
-                {
-                    try
-                    {
-                        xmlDocument = documentInfo.Xml.ToXmlDocument();
-                    }
-                    catch (XmlException xmlException)
-                    {
-                        ShowProgress(0, string.Format("\nDocument {0} was malformed. ({1})", documentInfo.DocumentID, xmlException.Message));
-                    }
-                }
+                XmlDocument xmlDocument = documentInfo.Content as XmlDocument;
+                XmlException xmlException = documentInfo.Content as XmlException;
 
                 if (xmlDocument != null)
                 {
@@ -335,6 +325,10 @@ namespace XmlToTable.Core
                     {
                         throw new InvalidOperationException(string.Format("Error processing item {0}: {1}", documentInfo.DocumentID, processingException.Message), processingException);
                     }
+                }
+                else if (xmlException != null)
+                {
+                    ShowProgress(0, string.Format("\nDocument {0} was malformed. ({1})", documentInfo.DocumentID, xmlException.Message));
                 }
             }
         }

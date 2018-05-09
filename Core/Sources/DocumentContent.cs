@@ -4,6 +4,6 @@
     {
         public string DocumentID { get; set; }
         public string ProviderName { get; set; }
-        public string Xml { get; set; }
+        public object Content { get; set; }
     }
 }

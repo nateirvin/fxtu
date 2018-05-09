@@ -81,7 +81,8 @@ namespace XmlToTable.Core.Sources
                     DocumentContent documentContent = new DocumentContent();
                     documentContent.DocumentID = _reader[Columns.DocumentId].ToString();
                     documentContent.ProviderName = _reader[Columns.ProviderName].ToString();
-                    documentContent.Xml = _reader[Columns.Xml].ToString();
+                    string rawXml = _reader[Columns.Xml].ToString();
+                    documentContent.Content = XmlParser.TryParseXml(rawXml);
                     return documentContent;
                 }
             }
