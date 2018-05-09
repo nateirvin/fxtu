@@ -42,6 +42,7 @@
     <Compile Include="Columns.cs" />
     <Compile Include="ComponentState.cs" />
     <Compile Include="ConfigurablePropertyAttribute.cs" />
+    <Compile Include="ISourceAdapter.cs" />
     <Compile Include="KeyValueModel.cs" />
     <Compile Include="DataForeignKey.cs" />
     <Compile Include="DataTypeHelper.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HierarchicalModel.cs" />
     <Compile Include="ShreddingEngine.cs" />
+    <Compile Include="SqlServerSourceAdapter.cs" />
     <Compile Include="SqlStatements.cs" />
     <Compile Include="TooLongNameBehavior.cs" />
     <Compile Include="Upgrades\EmbeddedXmlUpgrade.cs" />

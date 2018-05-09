@@ -16,7 +16,7 @@ namespace XmlToTable.Core
     {
         private readonly ShreddingEngineSettings _settings;
         private readonly SqlConnection _repositoryConnection;
-        private readonly SqlConnection _sourceConnection;
+        private readonly ISourceAdapter _sourceAdapter;
         private readonly AdapterContext _adapterContext;
 
         public ShreddingEngine()
@@ -28,7 +28,7 @@ namespace XmlToTable.Core
         {
             _settings = settings;
             EngineState = ComponentState.Uninitialized;
-            _sourceConnection = new SqlConnection(_settings.SourceConnectionAddress);
+            _sourceAdapter = new SqlServerSourceAdapter(_settings);
             _repositoryConnection = new SqlConnection(_settings.GetRepositoryConnectionAddress());
             _adapterContext = new AdapterContext(_settings);
         }
@@ -43,7 +43,7 @@ namespace XmlToTable.Core
                 throw new InvalidOperationException("This object has already been initialized or disposed.");
             }
 
-            _sourceConnection.Open();
+            _sourceAdapter.OpenConnection();
             _repositoryConnection.Open();
 
             CreateOrUpgradeRepositoryIfNecessary();
@@ -213,11 +213,8 @@ namespace XmlToTable.Core
             if (shouldImport)
             {
                 ShowProgress(0, "Gathering documents");
-
-                string sourceQuery = SqlBuilder.BuildGetAllDocumentsInfoQuery(_settings.SourceSpecification);
-                DataSet documentsDataContainer = _sourceConnection.GetDataSetFromQuery(sourceQuery, commandTimeout: _settings.SourceQueryTimeout);
-
-                _repositoryConnection.ExecuteProcedure(SqlStatements.usp_ImportDocumentInfos, new SqlParameter("@Items", documentsDataContainer.Tables[0]));
+                DataTable documentInfos = _sourceAdapter.GetDocumentInfos();
+                _repositoryConnection.ExecuteProcedure(SqlStatements.usp_ImportDocumentInfos, new SqlParameter("@Items", documentInfos));
             }
         }
 
@@ -230,10 +227,7 @@ namespace XmlToTable.Core
                 DataTable priorityItemsTable;
                 if (!string.IsNullOrWhiteSpace(_settings.ProviderToProcess))
                 {
-                    string query = SqlBuilder.BuildGetPriorityItemsQuery(_settings.SourceSpecification);
-                    List<SqlParameter> parameters = new List<SqlParameter> { new SqlParameter("@ProviderName", _settings.ProviderToProcess)};
-                    DataSet priorityItemsContainer = _sourceConnection.GetDataSetFromQuery(query, parameters, _settings.SourceQueryTimeout);
-                    priorityItemsTable = priorityItemsContainer.Tables[0];
+                    priorityItemsTable = _sourceAdapter.GetPriorityItems();
                 }
                 else
                 {
@@ -304,43 +298,38 @@ namespace XmlToTable.Core
         private void Import(List<int> documentIds)
         {
             int processedCount = 0;
-            using (SqlCommand getBatchCommand = new SqlCommand(SqlBuilder.BuildGetBatchItemsQuery(_settings.SourceSpecification, documentIds)))
+            using (IDataReader batchItemReader = _sourceAdapter.GetDocumentBatchReader(documentIds))
             {
-                getBatchCommand.Connection = _sourceConnection;
-                getBatchCommand.CommandTimeout = _settings.SourceQueryTimeout;
-                using (SqlDataReader batchItemReader = getBatchCommand.ExecuteReader())
+                while (batchItemReader.Read())
                 {
-                    while (batchItemReader.Read())
+                    processedCount++;
+                    ShowItemProgress("Importing", processedCount, documentIds.Count);
+
+                    int documentID = Convert.ToInt32(batchItemReader[Columns.DocumentId]);
+                    string providerName = batchItemReader[Columns.ProviderName].ToString();
+                    string xml = batchItemReader[Columns.Xml].ToString();
+
+                    XmlDocument xmlDocument = null;
+                    if (!string.IsNullOrWhiteSpace(xml))
                     {
-                        processedCount++;
-                        ShowItemProgress("Importing", processedCount, documentIds.Count);
-
-                        int documentID = Convert.ToInt32(batchItemReader[Columns.DocumentId]);
-                        string providerName = batchItemReader[Columns.ProviderName].ToString();
-                        string xml = batchItemReader[Columns.Xml].ToString();
-
-                        XmlDocument xmlDocument = null;
-                        if (!string.IsNullOrWhiteSpace(xml))
+                        try
                         {
-                            try
-                            {
-                                xmlDocument = xml.ToXmlDocument();
-                            }
-                            catch (XmlException xmlException)
-                            {
-                                ShowProgress(0, string.Format("\nDocument {0} was malformed. ({1})", documentID, xmlException.Message));
-                            }
+                            xmlDocument = xml.ToXmlDocument();
                         }
-                        if (xmlDocument != null)
+                        catch (XmlException xmlException)
                         {
-                            try
-                            {
-                                _adapterContext.ImportDocument(documentID, providerName, xmlDocument);
-                            }
-                            catch (Exception processingException)
-                            {
-                                throw new InvalidOperationException(string.Format("Error processing item {0}: {1}", documentID, processingException.Message), processingException);
-                            }
+                            ShowProgress(0, string.Format("\nDocument {0} was malformed. ({1})", documentID, xmlException.Message));
+                        }
+                    }
+                    if (xmlDocument != null)
+                    {
+                        try
+                        {
+                            _adapterContext.ImportDocument(documentID, providerName, xmlDocument);
+                        }
+                        catch (Exception processingException)
+                        {
+                            throw new InvalidOperationException(string.Format("Error processing item {0}: {1}", documentID, processingException.Message), processingException);
                         }
                     }
                 }
@@ -418,7 +407,7 @@ namespace XmlToTable.Core
         public void Dispose()
         {
             _repositoryConnection.Dispose();
-            _sourceConnection.Dispose();
+            _sourceAdapter.Dispose();
         }
     }
 }
