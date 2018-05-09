@@ -50,8 +50,12 @@ namespace XmlToTable.Core
 
         public object Parse(string value)
         {
-            string adjustedValue = RemoveSpaces(value);
-            return _parseMethod.Invoke(null, new object[] { adjustedValue });
+            if (IsNumeric(value))
+            {
+                value = RemoveSpaces(value);
+            }
+
+            return _parseMethod.Invoke(null, new object[] { value });
         }
 
         private static string RemoveSpaces(string value)

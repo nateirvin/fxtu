@@ -56,6 +56,11 @@ namespace System.Xml
         {
             if (Regex.IsMatch(content, "<.+?>", RegexOptions.Singleline))
             {
+                if (Regex.IsMatch(content, "<html", RegexOptions.IgnoreCase))
+                {
+                    return false;
+                }
+
                 try
                 {
                     XmlDocument tempDocument = new XmlDocument();
