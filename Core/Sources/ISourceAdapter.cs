@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Data;
 
-namespace XmlToTable.Core
+namespace XmlToTable.Core.Sources
 {
     internal interface ISourceAdapter : IDisposable
     {
         void OpenConnection();
-        DocumentInfo.DocumentsDataTable GetDocumentInfos();
+        DocumentModel.MetaDataDataTable GetDocumentMetaData();
         DataTable GetPriorityItems();
         IDataReader GetDocumentBatchReader(List<string> documentIds);
     }

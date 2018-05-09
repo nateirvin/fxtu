@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using XmlToTable.Core.Properties;
+using XmlToTable.Core.Sources;
 using XmlToTable.Core.Upgrades;
 
 namespace XmlToTable.Core
@@ -220,7 +221,7 @@ namespace XmlToTable.Core
             if (shouldImport)
             {
                 ShowProgress(0, "Gathering documents");
-                DataTable documentInfos = _sourceAdapter.GetDocumentInfos();
+                DataTable documentInfos = _sourceAdapter.GetDocumentMetaData();
                 SqlParameter tableParameter = new SqlParameter("@Items", SqlDbType.Structured) {Value = documentInfos};
                 _repositoryConnection.ExecuteProcedure(SqlStatements.usp_ImportDocumentInfos, tableParameter);
             }

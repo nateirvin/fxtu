@@ -4,7 +4,7 @@ using System.Data;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace XmlToTable.Core
+namespace XmlToTable.Core.Sources
 {
     internal class NtfsSourceAdapter : ISourceAdapter
     {
@@ -26,17 +26,17 @@ namespace XmlToTable.Core
             }
         }
 
-        public DocumentInfo.DocumentsDataTable GetDocumentInfos()
+        public DocumentModel.MetaDataDataTable GetDocumentMetaData()
         {
             if (_directoryInfo == null)
             {
                 OpenConnection();
             }
 
-            DocumentInfo.DocumentsDataTable documentsDataTable = new DocumentInfo.DocumentsDataTable();
+            DocumentModel.MetaDataDataTable documentsDataTable = new DocumentModel.MetaDataDataTable();
 
-            FileInfo[] fileInfos = _directoryInfo.GetFiles("*.*", SearchOption.AllDirectories);
-            foreach (FileInfo fileInfo in fileInfos)
+            FileInfo[] fileSystemObjects = _directoryInfo.GetFiles("*.*", SearchOption.AllDirectories);
+            foreach (FileInfo fileInfo in fileSystemObjects)
             {
                 if (IsDocumentFile(fileInfo.FullName))
                 {
@@ -45,7 +45,7 @@ namespace XmlToTable.Core
                     {
                         fileKey = fileKey.Substring(1);
                     }
-                    documentsDataTable.AddDocumentsRow(fileKey, "unknown_provider", 0, fileInfo.CreationTime);
+                    documentsDataTable.AddMetaDataRow(fileKey, "unknown_provider", 0, fileInfo.CreationTime);
                 }
             }
 
@@ -69,13 +69,13 @@ namespace XmlToTable.Core
 
         public IDataReader GetDocumentBatchReader(List<string> documentIds)
         {
-            DocumentInfo.DocumentContentDataTable documentsDataTable = new DocumentInfo.DocumentContentDataTable();
+            DocumentModel.ContentDataTable documentsDataTable = new DocumentModel.ContentDataTable();
 
             foreach (string documentId in documentIds)
             {
                 string fullPath = Path.Combine(Settings.SourceLocation, documentId);
                 string xml = File.ReadAllText(fullPath);
-                documentsDataTable.AddDocumentContentRow(documentId, "unknown_provider", xml);
+                documentsDataTable.AddContentRow(documentId, "unknown_provider", xml);
             }
 
             return new DataTableReader(documentsDataTable);

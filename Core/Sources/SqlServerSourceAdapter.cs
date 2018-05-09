@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace XmlToTable.Core
+namespace XmlToTable.Core.Sources
 {
     internal class SqlServerSourceAdapter : ISourceAdapter
     {
@@ -27,11 +27,11 @@ namespace XmlToTable.Core
             _sourceConnection.Open();
         }
 
-        public DocumentInfo.DocumentsDataTable GetDocumentInfos()
+        public DocumentModel.MetaDataDataTable GetDocumentMetaData()
         {
             string sourceQuery = SqlBuilder.BuildGetAllDocumentsInfoQuery(_settings.SourceSpecification);
             DataSet documentsDataContainer = _sourceConnection.GetDataSetFromQuery(sourceQuery, commandTimeout: _settings.SourceQueryTimeout);
-            return new DocumentInfo.DocumentsDataTable(documentsDataContainer.Tables[0]);
+            return new DocumentModel.MetaDataDataTable(documentsDataContainer.Tables[0]);
         }
 
         public DataTable GetPriorityItems()

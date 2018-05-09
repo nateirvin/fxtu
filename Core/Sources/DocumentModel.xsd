@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<xs:schema id="DocumentInfo" targetNamespace="http://tempuri.org/DocumentInfo.xsd" xmlns:mstns="http://tempuri.org/DocumentInfo.xsd" xmlns="http://tempuri.org/DocumentInfo.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+<xs:schema id="DocumentModel" targetNamespace="http://tempuri.org/DocumentModel.xsd" xmlns:mstns="http://tempuri.org/DocumentModel.xsd" xmlns="http://tempuri.org/DocumentModel.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
   <xs:annotation>
     <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
       <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="NotPublic" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
@@ -9,10 +9,10 @@
       </DataSource>
     </xs:appinfo>
   </xs:annotation>
-  <xs:element name="DocumentInfo" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="DocumentInfo" msprop:Generator_UserDSName="DocumentInfo">
+  <xs:element name="DocumentModel" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="DocumentModel" msprop:Generator_UserDSName="DocumentModel">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="Documents" msprop:Generator_TableClassName="DocumentsDataTable" msprop:Generator_TableVarName="tableDocuments" msprop:Generator_TablePropName="Documents" msprop:Generator_RowDeletingName="DocumentsRowDeleting" msprop:Generator_RowChangingName="DocumentsRowChanging" msprop:Generator_RowEvHandlerName="DocumentsRowChangeEventHandler" msprop:Generator_RowDeletedName="DocumentsRowDeleted" msprop:Generator_UserTableName="Documents" msprop:Generator_RowChangedName="DocumentsRowChanged" msprop:Generator_RowEvArgName="DocumentsRowChangeEvent" msprop:Generator_RowClassName="DocumentsRow">
+        <xs:element name="MetaData" msprop:Generator_TableClassName="MetaDataDataTable" msprop:Generator_TableVarName="tableMetaData" msprop:Generator_RowChangedName="MetaDataRowChanged" msprop:Generator_TablePropName="MetaData" msprop:Generator_RowDeletingName="MetaDataRowDeleting" msprop:Generator_RowChangingName="MetaDataRowChanging" msprop:Generator_RowEvHandlerName="MetaDataRowChangeEventHandler" msprop:Generator_RowDeletedName="MetaDataRowDeleted" msprop:Generator_RowClassName="MetaDataRow" msprop:Generator_UserTableName="MetaData" msprop:Generator_RowEvArgName="MetaDataRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="DocumentID" msprop:Generator_ColumnVarNameInTable="columnDocumentID" msprop:Generator_ColumnPropNameInRow="DocumentID" msprop:Generator_ColumnPropNameInTable="DocumentIDColumn" msprop:Generator_UserColumnName="DocumentID" type="xs:string" />
@@ -22,7 +22,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="DocumentContent" msprop:Generator_TableClassName="DocumentContentDataTable" msprop:Generator_TableVarName="tableDocumentContent" msprop:Generator_TablePropName="DocumentContent" msprop:Generator_RowDeletingName="DocumentContentRowDeleting" msprop:Generator_RowChangingName="DocumentContentRowChanging" msprop:Generator_RowEvHandlerName="DocumentContentRowChangeEventHandler" msprop:Generator_RowDeletedName="DocumentContentRowDeleted" msprop:Generator_UserTableName="DocumentContent" msprop:Generator_RowChangedName="DocumentContentRowChanged" msprop:Generator_RowEvArgName="DocumentContentRowChangeEvent" msprop:Generator_RowClassName="DocumentContentRow">
+        <xs:element name="Content" msprop:Generator_TableClassName="ContentDataTable" msprop:Generator_TableVarName="tableContent" msprop:Generator_RowChangedName="ContentRowChanged" msprop:Generator_TablePropName="Content" msprop:Generator_RowDeletingName="ContentRowDeleting" msprop:Generator_RowChangingName="ContentRowChanging" msprop:Generator_RowEvHandlerName="ContentRowChangeEventHandler" msprop:Generator_RowDeletedName="ContentRowDeleted" msprop:Generator_RowClassName="ContentRow" msprop:Generator_UserTableName="Content" msprop:Generator_RowEvArgName="ContentRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="DocumentID" msprop:Generator_ColumnVarNameInTable="columnDocumentID" msprop:Generator_ColumnPropNameInRow="DocumentID" msprop:Generator_ColumnPropNameInTable="DocumentIDColumn" msprop:Generator_UserColumnName="DocumentID" type="xs:string" />
@@ -34,11 +34,11 @@
       </xs:choice>
     </xs:complexType>
     <xs:unique name="Constraint1">
-      <xs:selector xpath=".//mstns:Documents" />
+      <xs:selector xpath=".//mstns:MetaData" />
       <xs:field xpath="mstns:DocumentID" />
     </xs:unique>
-    <xs:unique name="DocumentContent_Constraint1" msdata:ConstraintName="Constraint1">
-      <xs:selector xpath=".//mstns:DocumentContent" />
+    <xs:unique name="Content_Constraint1" msdata:ConstraintName="Constraint1">
+      <xs:selector xpath=".//mstns:Content" />
       <xs:field xpath="mstns:DocumentID" />
     </xs:unique>
   </xs:element>

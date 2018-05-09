@@ -10,7 +10,7 @@
 
 #pragma warning disable 1591
 
-namespace XmlToTable.Core {
+namespace XmlToTable.Core.Sources {
     
     
     /// <summary>
@@ -20,19 +20,19 @@ namespace XmlToTable.Core {
     [global::System.ComponentModel.DesignerCategoryAttribute("code")]
     [global::System.ComponentModel.ToolboxItem(true)]
     [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedDataSetSchema")]
-    [global::System.Xml.Serialization.XmlRootAttribute("DocumentInfo")]
+    [global::System.Xml.Serialization.XmlRootAttribute("DocumentModel")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.DataSet")]
-    internal partial class DocumentInfo : global::System.Data.DataSet {
+    internal partial class DocumentModel : global::System.Data.DataSet {
         
-        private DocumentsDataTable tableDocuments;
+        private MetaDataDataTable tableMetaData;
         
-        private DocumentContentDataTable tableDocumentContent;
+        private ContentDataTable tableContent;
         
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-        public DocumentInfo() {
+        public DocumentModel() {
             this.BeginInit();
             this.InitClass();
             global::System.ComponentModel.CollectionChangeEventHandler schemaChangedHandler = new global::System.ComponentModel.CollectionChangeEventHandler(this.SchemaChanged);
@@ -43,7 +43,7 @@ namespace XmlToTable.Core {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-        protected DocumentInfo(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+        protected DocumentModel(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                 base(info, context, false) {
             if ((this.IsBinarySerialized(info, context) == true)) {
                 this.InitVars(false);
@@ -56,11 +56,11 @@ namespace XmlToTable.Core {
             if ((this.DetermineSchemaSerializationMode(info, context) == global::System.Data.SchemaSerializationMode.IncludeSchema)) {
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXmlSchema(new global::System.Xml.XmlTextReader(new global::System.IO.StringReader(strSchema)));
-                if ((ds.Tables["Documents"] != null)) {
-                    base.Tables.Add(new DocumentsDataTable(ds.Tables["Documents"]));
+                if ((ds.Tables["MetaData"] != null)) {
+                    base.Tables.Add(new MetaDataDataTable(ds.Tables["MetaData"]));
                 }
-                if ((ds.Tables["DocumentContent"] != null)) {
-                    base.Tables.Add(new DocumentContentDataTable(ds.Tables["DocumentContent"]));
+                if ((ds.Tables["Content"] != null)) {
+                    base.Tables.Add(new ContentDataTable(ds.Tables["Content"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -84,9 +84,9 @@ namespace XmlToTable.Core {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public DocumentsDataTable Documents {
+        public MetaDataDataTable MetaData {
             get {
-                return this.tableDocuments;
+                return this.tableMetaData;
             }
         }
         
@@ -94,9 +94,9 @@ namespace XmlToTable.Core {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public DocumentContentDataTable DocumentContent {
+        public ContentDataTable Content {
             get {
-                return this.tableDocumentContent;
+                return this.tableContent;
             }
         }
         
@@ -142,7 +142,7 @@ namespace XmlToTable.Core {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         public override global::System.Data.DataSet Clone() {
-            DocumentInfo cln = ((DocumentInfo)(base.Clone()));
+            DocumentModel cln = ((DocumentModel)(base.Clone()));
             cln.InitVars();
             cln.SchemaSerializationMode = this.SchemaSerializationMode;
             return cln;
@@ -167,11 +167,11 @@ namespace XmlToTable.Core {
                 this.Reset();
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXml(reader);
-                if ((ds.Tables["Documents"] != null)) {
-                    base.Tables.Add(new DocumentsDataTable(ds.Tables["Documents"]));
+                if ((ds.Tables["MetaData"] != null)) {
+                    base.Tables.Add(new MetaDataDataTable(ds.Tables["MetaData"]));
                 }
-                if ((ds.Tables["DocumentContent"] != null)) {
-                    base.Tables.Add(new DocumentContentDataTable(ds.Tables["DocumentContent"]));
+                if ((ds.Tables["Content"] != null)) {
+                    base.Tables.Add(new ContentDataTable(ds.Tables["Content"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -206,16 +206,16 @@ namespace XmlToTable.Core {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         internal void InitVars(bool initTable) {
-            this.tableDocuments = ((DocumentsDataTable)(base.Tables["Documents"]));
+            this.tableMetaData = ((MetaDataDataTable)(base.Tables["MetaData"]));
             if ((initTable == true)) {
-                if ((this.tableDocuments != null)) {
-                    this.tableDocuments.InitVars();
+                if ((this.tableMetaData != null)) {
+                    this.tableMetaData.InitVars();
                 }
             }
-            this.tableDocumentContent = ((DocumentContentDataTable)(base.Tables["DocumentContent"]));
+            this.tableContent = ((ContentDataTable)(base.Tables["Content"]));
             if ((initTable == true)) {
-                if ((this.tableDocumentContent != null)) {
-                    this.tableDocumentContent.InitVars();
+                if ((this.tableContent != null)) {
+                    this.tableContent.InitVars();
                 }
             }
         }
@@ -223,26 +223,26 @@ namespace XmlToTable.Core {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         private void InitClass() {
-            this.DataSetName = "DocumentInfo";
+            this.DataSetName = "DocumentModel";
             this.Prefix = "";
-            this.Namespace = "http://tempuri.org/DocumentInfo.xsd";
+            this.Namespace = "http://tempuri.org/DocumentModel.xsd";
             this.EnforceConstraints = true;
             this.SchemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
-            this.tableDocuments = new DocumentsDataTable();
-            base.Tables.Add(this.tableDocuments);
-            this.tableDocumentContent = new DocumentContentDataTable();
-            base.Tables.Add(this.tableDocumentContent);
+            this.tableMetaData = new MetaDataDataTable();
+            base.Tables.Add(this.tableMetaData);
+            this.tableContent = new ContentDataTable();
+            base.Tables.Add(this.tableContent);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-        private bool ShouldSerializeDocuments() {
+        private bool ShouldSerializeMetaData() {
             return false;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-        private bool ShouldSerializeDocumentContent() {
+        private bool ShouldSerializeContent() {
             return false;
         }
         
@@ -257,7 +257,7 @@ namespace XmlToTable.Core {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedDataSetSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
-            DocumentInfo ds = new DocumentInfo();
+            DocumentModel ds = new DocumentModel();
             global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
             global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
             global::System.Xml.Schema.XmlSchemaAny any = new global::System.Xml.Schema.XmlSchemaAny();
@@ -302,17 +302,17 @@ namespace XmlToTable.Core {
         }
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-        public delegate void DocumentsRowChangeEventHandler(object sender, DocumentsRowChangeEvent e);
+        public delegate void MetaDataRowChangeEventHandler(object sender, MetaDataRowChangeEvent e);
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-        public delegate void DocumentContentRowChangeEventHandler(object sender, DocumentContentRowChangeEvent e);
+        public delegate void ContentRowChangeEventHandler(object sender, ContentRowChangeEvent e);
         
         /// <summary>
         ///Represents the strongly named DataTable class.
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class DocumentsDataTable : global::System.Data.TypedTableBase<DocumentsRow> {
+        public partial class MetaDataDataTable : global::System.Data.TypedTableBase<MetaDataRow> {
             
             private global::System.Data.DataColumn columnDocumentID;
             
@@ -324,8 +324,8 @@ namespace XmlToTable.Core {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public DocumentsDataTable() {
-                this.TableName = "Documents";
+            public MetaDataDataTable() {
+                this.TableName = "MetaData";
                 this.BeginInit();
                 this.InitClass();
                 this.EndInit();
@@ -333,7 +333,7 @@ namespace XmlToTable.Core {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            internal DocumentsDataTable(global::System.Data.DataTable table) {
+            internal MetaDataDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
                     this.CaseSensitive = table.CaseSensitive;
@@ -350,7 +350,7 @@ namespace XmlToTable.Core {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            protected DocumentsDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+            protected MetaDataDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
@@ -398,48 +398,48 @@ namespace XmlToTable.Core {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public DocumentsRow this[int index] {
+            public MetaDataRow this[int index] {
                 get {
-                    return ((DocumentsRow)(this.Rows[index]));
+                    return ((MetaDataRow)(this.Rows[index]));
                 }
             }
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public event DocumentsRowChangeEventHandler DocumentsRowChanging;
+            public event MetaDataRowChangeEventHandler MetaDataRowChanging;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public event DocumentsRowChangeEventHandler DocumentsRowChanged;
+            public event MetaDataRowChangeEventHandler MetaDataRowChanged;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public event DocumentsRowChangeEventHandler DocumentsRowDeleting;
+            public event MetaDataRowChangeEventHandler MetaDataRowDeleting;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public event DocumentsRowChangeEventHandler DocumentsRowDeleted;
+            public event MetaDataRowChangeEventHandler MetaDataRowDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void AddDocumentsRow(DocumentsRow row) {
+            public void AddMetaDataRow(MetaDataRow row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public DocumentsRow AddDocumentsRow(string DocumentID, string ProviderName, int SubjectID, System.DateTime GenerationDate) {
-                DocumentsRow rowDocumentsRow = ((DocumentsRow)(this.NewRow()));
+            public MetaDataRow AddMetaDataRow(string DocumentID, string ProviderName, int SubjectID, System.DateTime GenerationDate) {
+                MetaDataRow rowMetaDataRow = ((MetaDataRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         DocumentID,
                         ProviderName,
                         SubjectID,
                         GenerationDate};
-                rowDocumentsRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowDocumentsRow);
-                return rowDocumentsRow;
+                rowMetaDataRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowMetaDataRow);
+                return rowMetaDataRow;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public override global::System.Data.DataTable Clone() {
-                DocumentsDataTable cln = ((DocumentsDataTable)(base.Clone()));
+                MetaDataDataTable cln = ((MetaDataDataTable)(base.Clone()));
                 cln.InitVars();
                 return cln;
             }
@@ -447,7 +447,7 @@ namespace XmlToTable.Core {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
-                return new DocumentsDataTable();
+                return new MetaDataDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -479,28 +479,28 @@ namespace XmlToTable.Core {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public DocumentsRow NewDocumentsRow() {
-                return ((DocumentsRow)(this.NewRow()));
+            public MetaDataRow NewMetaDataRow() {
+                return ((MetaDataRow)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new DocumentsRow(builder);
+                return new MetaDataRow(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override global::System.Type GetRowType() {
-                return typeof(DocumentsRow);
+                return typeof(MetaDataRow);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
-                if ((this.DocumentsRowChanged != null)) {
-                    this.DocumentsRowChanged(this, new DocumentsRowChangeEvent(((DocumentsRow)(e.Row)), e.Action));
+                if ((this.MetaDataRowChanged != null)) {
+                    this.MetaDataRowChanged(this, new MetaDataRowChangeEvent(((MetaDataRow)(e.Row)), e.Action));
                 }
             }
             
@@ -508,8 +508,8 @@ namespace XmlToTable.Core {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
-                if ((this.DocumentsRowChanging != null)) {
-                    this.DocumentsRowChanging(this, new DocumentsRowChangeEvent(((DocumentsRow)(e.Row)), e.Action));
+                if ((this.MetaDataRowChanging != null)) {
+                    this.MetaDataRowChanging(this, new MetaDataRowChangeEvent(((MetaDataRow)(e.Row)), e.Action));
                 }
             }
             
@@ -517,8 +517,8 @@ namespace XmlToTable.Core {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
-                if ((this.DocumentsRowDeleted != null)) {
-                    this.DocumentsRowDeleted(this, new DocumentsRowChangeEvent(((DocumentsRow)(e.Row)), e.Action));
+                if ((this.MetaDataRowDeleted != null)) {
+                    this.MetaDataRowDeleted(this, new MetaDataRowChangeEvent(((MetaDataRow)(e.Row)), e.Action));
                 }
             }
             
@@ -526,14 +526,14 @@ namespace XmlToTable.Core {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
-                if ((this.DocumentsRowDeleting != null)) {
-                    this.DocumentsRowDeleting(this, new DocumentsRowChangeEvent(((DocumentsRow)(e.Row)), e.Action));
+                if ((this.MetaDataRowDeleting != null)) {
+                    this.MetaDataRowDeleting(this, new MetaDataRowChangeEvent(((MetaDataRow)(e.Row)), e.Action));
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void RemoveDocumentsRow(DocumentsRow row) {
+            public void RemoveMetaDataRow(MetaDataRow row) {
                 this.Rows.Remove(row);
             }
             
@@ -542,7 +542,7 @@ namespace XmlToTable.Core {
             public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
                 global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
                 global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                DocumentInfo ds = new DocumentInfo();
+                DocumentModel ds = new DocumentModel();
                 global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
                 any1.Namespace = "http://www.w3.org/2001/XMLSchema";
                 any1.MinOccurs = new decimal(0);
@@ -560,7 +560,7 @@ namespace XmlToTable.Core {
                 type.Attributes.Add(attribute1);
                 global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
                 attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "DocumentsDataTable";
+                attribute2.FixedValue = "MetaDataDataTable";
                 type.Attributes.Add(attribute2);
                 type.Particle = sequence;
                 global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
@@ -606,7 +606,7 @@ namespace XmlToTable.Core {
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class DocumentContentDataTable : global::System.Data.TypedTableBase<DocumentContentRow> {
+        public partial class ContentDataTable : global::System.Data.TypedTableBase<ContentRow> {
             
             private global::System.Data.DataColumn columnDocumentID;
             
@@ -616,8 +616,8 @@ namespace XmlToTable.Core {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public DocumentContentDataTable() {
-                this.TableName = "DocumentContent";
+            public ContentDataTable() {
+                this.TableName = "Content";
                 this.BeginInit();
                 this.InitClass();
                 this.EndInit();
@@ -625,7 +625,7 @@ namespace XmlToTable.Core {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            internal DocumentContentDataTable(global::System.Data.DataTable table) {
+            internal ContentDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
                     this.CaseSensitive = table.CaseSensitive;
@@ -642,7 +642,7 @@ namespace XmlToTable.Core {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            protected DocumentContentDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+            protected ContentDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
@@ -682,47 +682,47 @@ namespace XmlToTable.Core {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public DocumentContentRow this[int index] {
+            public ContentRow this[int index] {
                 get {
-                    return ((DocumentContentRow)(this.Rows[index]));
+                    return ((ContentRow)(this.Rows[index]));
                 }
             }
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public event DocumentContentRowChangeEventHandler DocumentContentRowChanging;
+            public event ContentRowChangeEventHandler ContentRowChanging;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public event DocumentContentRowChangeEventHandler DocumentContentRowChanged;
+            public event ContentRowChangeEventHandler ContentRowChanged;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public event DocumentContentRowChangeEventHandler DocumentContentRowDeleting;
+            public event ContentRowChangeEventHandler ContentRowDeleting;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public event DocumentContentRowChangeEventHandler DocumentContentRowDeleted;
+            public event ContentRowChangeEventHandler ContentRowDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void AddDocumentContentRow(DocumentContentRow row) {
+            public void AddContentRow(ContentRow row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public DocumentContentRow AddDocumentContentRow(string DocumentID, string ProviderName, string XML) {
-                DocumentContentRow rowDocumentContentRow = ((DocumentContentRow)(this.NewRow()));
+            public ContentRow AddContentRow(string DocumentID, string ProviderName, string XML) {
+                ContentRow rowContentRow = ((ContentRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         DocumentID,
                         ProviderName,
                         XML};
-                rowDocumentContentRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowDocumentContentRow);
-                return rowDocumentContentRow;
+                rowContentRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowContentRow);
+                return rowContentRow;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public override global::System.Data.DataTable Clone() {
-                DocumentContentDataTable cln = ((DocumentContentDataTable)(base.Clone()));
+                ContentDataTable cln = ((ContentDataTable)(base.Clone()));
                 cln.InitVars();
                 return cln;
             }
@@ -730,7 +730,7 @@ namespace XmlToTable.Core {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
-                return new DocumentContentDataTable();
+                return new ContentDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -759,28 +759,28 @@ namespace XmlToTable.Core {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public DocumentContentRow NewDocumentContentRow() {
-                return ((DocumentContentRow)(this.NewRow()));
+            public ContentRow NewContentRow() {
+                return ((ContentRow)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new DocumentContentRow(builder);
+                return new ContentRow(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override global::System.Type GetRowType() {
-                return typeof(DocumentContentRow);
+                return typeof(ContentRow);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
-                if ((this.DocumentContentRowChanged != null)) {
-                    this.DocumentContentRowChanged(this, new DocumentContentRowChangeEvent(((DocumentContentRow)(e.Row)), e.Action));
+                if ((this.ContentRowChanged != null)) {
+                    this.ContentRowChanged(this, new ContentRowChangeEvent(((ContentRow)(e.Row)), e.Action));
                 }
             }
             
@@ -788,8 +788,8 @@ namespace XmlToTable.Core {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
-                if ((this.DocumentContentRowChanging != null)) {
-                    this.DocumentContentRowChanging(this, new DocumentContentRowChangeEvent(((DocumentContentRow)(e.Row)), e.Action));
+                if ((this.ContentRowChanging != null)) {
+                    this.ContentRowChanging(this, new ContentRowChangeEvent(((ContentRow)(e.Row)), e.Action));
                 }
             }
             
@@ -797,8 +797,8 @@ namespace XmlToTable.Core {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
-                if ((this.DocumentContentRowDeleted != null)) {
-                    this.DocumentContentRowDeleted(this, new DocumentContentRowChangeEvent(((DocumentContentRow)(e.Row)), e.Action));
+                if ((this.ContentRowDeleted != null)) {
+                    this.ContentRowDeleted(this, new ContentRowChangeEvent(((ContentRow)(e.Row)), e.Action));
                 }
             }
             
@@ -806,14 +806,14 @@ namespace XmlToTable.Core {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
-                if ((this.DocumentContentRowDeleting != null)) {
-                    this.DocumentContentRowDeleting(this, new DocumentContentRowChangeEvent(((DocumentContentRow)(e.Row)), e.Action));
+                if ((this.ContentRowDeleting != null)) {
+                    this.ContentRowDeleting(this, new ContentRowChangeEvent(((ContentRow)(e.Row)), e.Action));
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public void RemoveDocumentContentRow(DocumentContentRow row) {
+            public void RemoveContentRow(ContentRow row) {
                 this.Rows.Remove(row);
             }
             
@@ -822,7 +822,7 @@ namespace XmlToTable.Core {
             public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
                 global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
                 global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                DocumentInfo ds = new DocumentInfo();
+                DocumentModel ds = new DocumentModel();
                 global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
                 any1.Namespace = "http://www.w3.org/2001/XMLSchema";
                 any1.MinOccurs = new decimal(0);
@@ -840,7 +840,7 @@ namespace XmlToTable.Core {
                 type.Attributes.Add(attribute1);
                 global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
                 attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "DocumentContentDataTable";
+                attribute2.FixedValue = "ContentDataTable";
                 type.Attributes.Add(attribute2);
                 type.Particle = sequence;
                 global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
@@ -884,25 +884,25 @@ namespace XmlToTable.Core {
         /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
-        public partial class DocumentsRow : global::System.Data.DataRow {
+        public partial class MetaDataRow : global::System.Data.DataRow {
             
-            private DocumentsDataTable tableDocuments;
+            private MetaDataDataTable tableMetaData;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            internal DocumentsRow(global::System.Data.DataRowBuilder rb) : 
+            internal MetaDataRow(global::System.Data.DataRowBuilder rb) : 
                     base(rb) {
-                this.tableDocuments = ((DocumentsDataTable)(this.Table));
+                this.tableMetaData = ((MetaDataDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public string DocumentID {
                 get {
-                    return ((string)(this[this.tableDocuments.DocumentIDColumn]));
+                    return ((string)(this[this.tableMetaData.DocumentIDColumn]));
                 }
                 set {
-                    this[this.tableDocuments.DocumentIDColumn] = value;
+                    this[this.tableMetaData.DocumentIDColumn] = value;
                 }
             }
             
@@ -914,11 +914,11 @@ namespace XmlToTable.Core {
                         return null;
                     }
                     else {
-                        return ((string)(this[this.tableDocuments.ProviderNameColumn]));
+                        return ((string)(this[this.tableMetaData.ProviderNameColumn]));
                     }
                 }
                 set {
-                    this[this.tableDocuments.ProviderNameColumn] = value;
+                    this[this.tableMetaData.ProviderNameColumn] = value;
                 }
             }
             
@@ -926,10 +926,10 @@ namespace XmlToTable.Core {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public int SubjectID {
                 get {
-                    return ((int)(this[this.tableDocuments.SubjectIDColumn]));
+                    return ((int)(this[this.tableMetaData.SubjectIDColumn]));
                 }
                 set {
-                    this[this.tableDocuments.SubjectIDColumn] = value;
+                    this[this.tableMetaData.SubjectIDColumn] = value;
                 }
             }
             
@@ -938,64 +938,64 @@ namespace XmlToTable.Core {
             public System.DateTime GenerationDate {
                 get {
                     try {
-                        return ((global::System.DateTime)(this[this.tableDocuments.GenerationDateColumn]));
+                        return ((global::System.DateTime)(this[this.tableMetaData.GenerationDateColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'GenerationDate\' in table \'Documents\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'GenerationDate\' in table \'MetaData\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableDocuments.GenerationDateColumn] = value;
+                    this[this.tableMetaData.GenerationDateColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public bool IsProviderNameNull() {
-                return this.IsNull(this.tableDocuments.ProviderNameColumn);
+                return this.IsNull(this.tableMetaData.ProviderNameColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public void SetProviderNameNull() {
-                this[this.tableDocuments.ProviderNameColumn] = global::System.Convert.DBNull;
+                this[this.tableMetaData.ProviderNameColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public bool IsGenerationDateNull() {
-                return this.IsNull(this.tableDocuments.GenerationDateColumn);
+                return this.IsNull(this.tableMetaData.GenerationDateColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public void SetGenerationDateNull() {
-                this[this.tableDocuments.GenerationDateColumn] = global::System.Convert.DBNull;
+                this[this.tableMetaData.GenerationDateColumn] = global::System.Convert.DBNull;
             }
         }
         
         /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
-        public partial class DocumentContentRow : global::System.Data.DataRow {
+        public partial class ContentRow : global::System.Data.DataRow {
             
-            private DocumentContentDataTable tableDocumentContent;
+            private ContentDataTable tableContent;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            internal DocumentContentRow(global::System.Data.DataRowBuilder rb) : 
+            internal ContentRow(global::System.Data.DataRowBuilder rb) : 
                     base(rb) {
-                this.tableDocumentContent = ((DocumentContentDataTable)(this.Table));
+                this.tableContent = ((ContentDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public string DocumentID {
                 get {
-                    return ((string)(this[this.tableDocumentContent.DocumentIDColumn]));
+                    return ((string)(this[this.tableContent.DocumentIDColumn]));
                 }
                 set {
-                    this[this.tableDocumentContent.DocumentIDColumn] = value;
+                    this[this.tableContent.DocumentIDColumn] = value;
                 }
             }
             
@@ -1007,11 +1007,11 @@ namespace XmlToTable.Core {
                         return null;
                     }
                     else {
-                        return ((string)(this[this.tableDocumentContent.ProviderNameColumn]));
+                        return ((string)(this[this.tableContent.ProviderNameColumn]));
                     }
                 }
                 set {
-                    this[this.tableDocumentContent.ProviderNameColumn] = value;
+                    this[this.tableContent.ProviderNameColumn] = value;
                 }
             }
             
@@ -1019,23 +1019,23 @@ namespace XmlToTable.Core {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public string XML {
                 get {
-                    return ((string)(this[this.tableDocumentContent.XMLColumn]));
+                    return ((string)(this[this.tableContent.XMLColumn]));
                 }
                 set {
-                    this[this.tableDocumentContent.XMLColumn] = value;
+                    this[this.tableContent.XMLColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public bool IsProviderNameNull() {
-                return this.IsNull(this.tableDocumentContent.ProviderNameColumn);
+                return this.IsNull(this.tableContent.ProviderNameColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public void SetProviderNameNull() {
-                this[this.tableDocumentContent.ProviderNameColumn] = global::System.Convert.DBNull;
+                this[this.tableContent.ProviderNameColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -1043,22 +1043,22 @@ namespace XmlToTable.Core {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-        public class DocumentsRowChangeEvent : global::System.EventArgs {
+        public class MetaDataRowChangeEvent : global::System.EventArgs {
             
-            private DocumentsRow eventRow;
+            private MetaDataRow eventRow;
             
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public DocumentsRowChangeEvent(DocumentsRow row, global::System.Data.DataRowAction action) {
+            public MetaDataRowChangeEvent(MetaDataRow row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public DocumentsRow Row {
+            public MetaDataRow Row {
                 get {
                     return this.eventRow;
                 }
@@ -1077,22 +1077,22 @@ namespace XmlToTable.Core {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-        public class DocumentContentRowChangeEvent : global::System.EventArgs {
+        public class ContentRowChangeEvent : global::System.EventArgs {
             
-            private DocumentContentRow eventRow;
+            private ContentRow eventRow;
             
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public DocumentContentRowChangeEvent(DocumentContentRow row, global::System.Data.DataRowAction action) {
+            public ContentRowChangeEvent(ContentRow row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public DocumentContentRow Row {
+            public ContentRow Row {
                 get {
                     return this.eventRow;
                 }
