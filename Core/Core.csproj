@@ -42,6 +42,14 @@
     <Compile Include="Columns.cs" />
     <Compile Include="ComponentState.cs" />
     <Compile Include="ConfigurablePropertyAttribute.cs" />
+    <Compile Include="DocumentInfo.cs">
+      <DependentUpon>DocumentInfo.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DocumentInfo.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DocumentInfo.xsd</DependentUpon>
+    </Compile>
     <Compile Include="ISourceAdapter.cs" />
     <Compile Include="KeyValueModel.cs" />
     <Compile Include="DataForeignKey.cs" />
@@ -53,6 +61,7 @@
     <Compile Include="InvalidNameException.cs" />
     <Compile Include="AdapterSettings.cs" />
     <Compile Include="NameHandler.cs" />
+    <Compile Include="NtfsSourceAdapter.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="PersistenceState.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -82,6 +91,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -93,6 +103,17 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="DocumentInfo.xsc">
+      <DependentUpon>DocumentInfo.xsd</DependentUpon>
+    </None>
+    <None Include="DocumentInfo.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DocumentInfo.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="DocumentInfo.xss">
+      <DependentUpon>DocumentInfo.xsd</DependentUpon>
+    </None>
     <None Include="Resources\CreateDatabaseObjects.sql" />
   </ItemGroup>
   <ItemGroup>

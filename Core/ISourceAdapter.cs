@@ -7,7 +7,7 @@ namespace XmlToTable.Core
     internal interface ISourceAdapter : IDisposable
     {
         void OpenConnection();
-        DataTable GetDocumentInfos();
+        DocumentInfo.DocumentsDataTable GetDocumentInfos();
         DataTable GetPriorityItems();
         IDataReader GetDocumentBatchReader(List<string> documentIds);
     }

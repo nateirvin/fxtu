@@ -27,11 +27,11 @@ namespace XmlToTable.Core
             _sourceConnection.Open();
         }
 
-        public DataTable GetDocumentInfos()
+        public DocumentInfo.DocumentsDataTable GetDocumentInfos()
         {
             string sourceQuery = SqlBuilder.BuildGetAllDocumentsInfoQuery(_settings.SourceSpecification);
             DataSet documentsDataContainer = _sourceConnection.GetDataSetFromQuery(sourceQuery, commandTimeout: _settings.SourceQueryTimeout);
-            return documentsDataContainer.Tables[0];
+            return new DocumentInfo.DocumentsDataTable(documentsDataContainer.Tables[0]);
         }
 
         public DataTable GetPriorityItems()
