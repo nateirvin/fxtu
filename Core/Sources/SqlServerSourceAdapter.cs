@@ -34,12 +34,12 @@ namespace XmlToTable.Core.Sources
             return new DocumentModel.MetaDataDataTable(documentsDataContainer.Tables[0]);
         }
 
-        public DataTable GetPriorityItems()
+        public DocumentModel.IdListDataTable GetPriorityItems()
         {
             string query = SqlBuilder.BuildGetPriorityItemsQuery(_settings.SourceSpecification);
             List<SqlParameter> parameters = new List<SqlParameter> { new SqlParameter("@ProviderName", _settings.ProviderToProcess) };
             DataSet priorityItemsContainer = _sourceConnection.GetDataSetFromQuery(query, parameters, _settings.SourceQueryTimeout);
-            return priorityItemsContainer.Tables[0];
+            return new DocumentModel.IdListDataTable(priorityItemsContainer.Tables[0]);
         }
 
         public IDataReader GetDocumentBatchReader(List<string> documentIds)

@@ -222,8 +222,7 @@ namespace XmlToTable.Core
             {
                 ShowProgress(0, "Gathering documents");
                 DataTable documentInfos = _sourceAdapter.GetDocumentMetaData();
-                SqlParameter tableParameter = new SqlParameter("@Items", SqlDbType.Structured) {Value = documentInfos};
-                _repositoryConnection.ExecuteProcedure(SqlStatements.usp_ImportDocumentInfos, tableParameter);
+                ExecuteRepositoryBulkProcedure(SqlStatements.usp_ImportDocumentInfos, documentInfos);
             }
         }
 
@@ -233,23 +232,24 @@ namespace XmlToTable.Core
 
             if (_settings.IsHierarchicalModel)
             {
-                DataTable priorityItemsTable;
+                DataTable priorityItemsTable = new DocumentModel.IdListDataTable();
                 if (!string.IsNullOrWhiteSpace(_settings.ProviderToProcess))
                 {
                     priorityItemsTable = _sourceAdapter.GetPriorityItems();
                 }
-                else
-                {
-                    priorityItemsTable = BuildIdsDataTable();
-                }
 
-                _repositoryConnection.ExecuteProcedure(SqlStatements.usp_SetPriority, new SqlParameter("@Items", priorityItemsTable));
+                ExecuteRepositoryBulkProcedure(SqlStatements.usp_SetPriority, priorityItemsTable);
             }
             else
             {
                 object parameterValue = !string.IsNullOrWhiteSpace(_settings.ProviderToProcess) ? _settings.ProviderToProcess : (object)DBNull.Value;
                 _repositoryConnection.ExecuteProcedure(SqlStatements.usp_SetPriority, new SqlParameter("@ProviderName", parameterValue));
             }
+        }
+
+        private void ExecuteRepositoryBulkProcedure(string storedProcedureName, DataTable tableValuedParameter)
+        {
+            _repositoryConnection.ExecuteProcedure(storedProcedureName, BuildTableValuedParameter(tableValuedParameter));
         }
 
         public int Shred(int batchSize)
@@ -380,12 +380,10 @@ namespace XmlToTable.Core
 
         private void UpdateProcessedItems(SqlTransaction transaction, List<string> processedDocumentIds)
         {
-            DataTable parameterValue = BuildIdsDataTable();
+            DocumentModel.IdListDataTable parameterValue = new DocumentModel.IdListDataTable();
             foreach (string id in processedDocumentIds)
             {
-                DataRow row = parameterValue.NewRow();
-                row["ID"] = id;
-                parameterValue.Rows.Add(row);
+                parameterValue.AddIdListRow(id);
             }
 
             using (SqlCommand markProcessedCommand = new SqlCommand(SqlStatements.usp_MarkProcessed))
@@ -393,16 +391,14 @@ namespace XmlToTable.Core
                 markProcessedCommand.CommandType = CommandType.StoredProcedure;
                 markProcessedCommand.Connection = transaction.Connection;
                 markProcessedCommand.Transaction = transaction;
-                markProcessedCommand.Parameters.AddWithValue("@Items", parameterValue);
+                markProcessedCommand.Parameters.Add(BuildTableValuedParameter(parameterValue));
                 markProcessedCommand.ExecuteNonQuery();
             }
         }
 
-        private static DataTable BuildIdsDataTable()
+        private static SqlParameter BuildTableValuedParameter(DataTable tableValuedParameter)
         {
-            DataTable table = new DataTable();
-            table.Columns.Add("ID", typeof(string));
-            return table;
+            return new SqlParameter("@Items", SqlDbType.Structured) {Value = tableValuedParameter};
         }
 
         private void ShowProgress(int progress, string message)

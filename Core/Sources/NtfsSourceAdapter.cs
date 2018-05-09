@@ -62,7 +62,7 @@ namespace XmlToTable.Core.Sources
             return true;
         }
 
-        public DataTable GetPriorityItems()
+        public DocumentModel.IdListDataTable GetPriorityItems()
         {
             throw new NotSupportedException();
         }

@@ -8,7 +8,7 @@ namespace XmlToTable.Core.Sources
     {
         void OpenConnection();
         DocumentModel.MetaDataDataTable GetDocumentMetaData();
-        DataTable GetPriorityItems();
+        DocumentModel.IdListDataTable GetPriorityItems();
         IDataReader GetDocumentBatchReader(List<string> documentIds);
     }
 }
