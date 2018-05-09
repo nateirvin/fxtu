@@ -65,8 +65,7 @@ namespace XmlToTable.Core
 
         private void CreateOrUpgradeRepositoryIfNecessary()
         {
-            string repositoryName = _settings.RepositoryName;
-            int databaseId = _repositoryConnection.GetInt32(SqlStatements.GetDatabaseId, new SqlParameter("@DatabaseName", repositoryName));
+            int databaseId = _settings.GetRepositoryID(_repositoryConnection);
 
             if (databaseId == 0)
             {
@@ -74,7 +73,7 @@ namespace XmlToTable.Core
                 CreateDatabase(_repositoryConnection);
             }
 
-            _repositoryConnection.SwitchDatabaseContext(repositoryName);
+            _repositoryConnection.SwitchDatabaseContext(_settings.RepositoryName);
 
             if (_adapterContext.RequiresUpgrade(_repositoryConnection))
             {
@@ -82,7 +81,7 @@ namespace XmlToTable.Core
                 UpgradeDatabase(_repositoryConnection);
             }
         }
-
+        
         private void CreateDatabase(SqlConnection repositoryConnection)
         {
             repositoryConnection.ExecuteStatement(SqlBuilder.BuildCreateDatabaseStatement(_settings.RepositoryName));

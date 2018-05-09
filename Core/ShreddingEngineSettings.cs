@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
@@ -207,6 +208,11 @@ namespace XmlToTable.Core
             connectionAddressBuilder.ApplicationName = "XmlToTable";
 
             return connectionAddressBuilder.ToString();
+        }
+
+        public int GetRepositoryID(SqlConnection repositoryConnection)
+        {
+            return repositoryConnection.GetInt32(SqlStatements.GetDatabaseId, new SqlParameter("@DatabaseName", RepositoryName));
         }
     }
 }

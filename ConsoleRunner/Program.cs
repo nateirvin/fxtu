@@ -199,6 +199,11 @@ namespace XmlToTable.Console
                 {
                     connection.Open();
 
+                    if (programSettings.GetRepositoryID(connection) == 0)
+                    {
+                        return false;
+                    }
+
                     connection.SwitchDatabaseContext(programSettings.RepositoryName);
 
                     EmbeddedXmlUpgrade upgrade = new EmbeddedXmlUpgrade(programSettings.UpgradeDocumentsQuery);

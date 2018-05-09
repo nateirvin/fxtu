@@ -16,8 +16,18 @@ namespace XmlToTable.Core.Upgrades
 
         public bool IsRequired(SqlConnection repositoryConnection)
         {
-            int objectId = repositoryConnection.GetInt32(SqlStatements.GetObjectId, new SqlParameter("@ObjectName", SqlStatements.usp_ReprocessDocuments));
-            return objectId == 0;
+            bool isKeyValueModel = DoesObjectExist(repositoryConnection, "DocumentVariables");
+            if(isKeyValueModel)
+            {
+                return !DoesObjectExist(repositoryConnection, SqlStatements.usp_ReprocessDocuments);
+            }
+
+            return false;
+        }
+
+        private static bool DoesObjectExist(SqlConnection repositoryConnection, string objectName)
+        {
+            return repositoryConnection.GetInt32(SqlStatements.GetObjectId, new SqlParameter("@ObjectName", objectName)) != 0;
         }
 
         public string DatabaseScript
