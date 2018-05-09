@@ -4,18 +4,24 @@ USAGE:
 
          OR
 
--sc=<connStr>  Connection string for source database.
+-sc=<string>   Source directory path or database connection string
                Required unless generating database creation script.
-               aka -sourceConnection=<connStr>            
+               aka -sourceConnection=<string>            
             
--ss=<spec>     Source object or query (or file containing one of those).
-               Required unless generating database creation script.
+-ss=<spec>     For source database: 
+                 the object or query (or file containing one of those) to use
+                 Required unless generating database creation script
+               For source files: 
+                 the regex file paths must match to be imported
+                 Optional
                aka -source=<spec>
                EXAMPLES: 
                 -source="dbo.Table"
                 -source="SELECT * FROM dbo.Table"
                 -source="tablename.txt"
                 -source="c:\query.sql"
+                -source="\\shared\file\path\"
+                -source="d:\files\docs\"
                
 -t=<value>     SQL timeout for source queries (in seconds).
                Optional. Default value is 30 seconds.

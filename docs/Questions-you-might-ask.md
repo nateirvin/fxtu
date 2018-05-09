@@ -11,7 +11,7 @@ You can specify other options as needed - if run with just option, the script wi
 
 ## **What permissions are needed?**
 
-On the source, the app only needs permission to SELECT from the table(s) and/or view(s) specified by the source object or query.
+On the source, the app only needs permission to read from the files, table(s) and/or view(s) specified.
 
 In the repository database, the app will need permission to:
 - SELECT FROM sys.databases & sys.columns

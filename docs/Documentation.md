@@ -10,7 +10,9 @@ The repository is the database the shredded XML data will be stored in. It can e
 For more info on how to get a database creation or upgrade script, see the [console help page](../ConsoleRunner/Resources/manpage.txt).
 
 ### Source
-The source is the database the raw XML is stored in. When setting up XML to Table, you'll need to specify a source _connection_ and source _object_. The source _object_ can be a table, a view, or a query (or the name of a file that contains one of those). If the source object is a query, it cannot contain a common-table expression. You can also specify a source _timeout_.
+The source is the file system or SQL Server database the raw XML is stored in. 
+ - For database sources, you'll need to specify a source _connection_ and source _object_. The source _object_ can be a table, a view, or a query (or the name of a file that contains one of those). If the source object is a query, it cannot contain a common-table expression. You can also specify a source _timeout_.
+ - For file system sources, you'll need to specify a root folder. You can also specify a filter to only pull certain files.
 
 The table, view, or query must return these columns:
 * **DocumentID** - The unique ID for the XML document (a non-null value that will be converted to a string).

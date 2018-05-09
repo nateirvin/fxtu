@@ -23,7 +23,7 @@ namespace XmlToTable.Core
                 throw new InvalidOperationException("The connection has already been initialized.");
             }
 
-            _sourceConnection = new SqlConnection(_settings.SourceConnectionAddress);
+            _sourceConnection = new SqlConnection(_settings.SourceLocation);
             _sourceConnection.Open();
         }
 

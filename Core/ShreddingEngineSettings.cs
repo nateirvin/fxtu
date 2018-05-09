@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.IO;
 using System.Reflection;
 
 namespace XmlToTable.Core
@@ -11,8 +12,8 @@ namespace XmlToTable.Core
     public class ShreddingEngineSettings : IAdapterSettings
     {
         protected const string ConfigSectionName = "xmlToTable";
-        protected const string SourceConnectionKeyName = "sourceConnection";
-        protected const string SourceConnectionShortcutName = "sc";
+        protected const string SourceLocationKeyName = "sourceConnection";
+        protected const string SourceLocationShortcutName = "sc";
         protected const string SourceSpecificationKeyName = "source";
         protected const string SourceSpecificationShortcutName = "ss";
         public const string UpgradeDocumentsQueryKeyName = "redoDocumentsQuery";
@@ -42,14 +43,19 @@ namespace XmlToTable.Core
             return (Hashtable) ConfigurationManager.GetSection(ConfigSectionName);
         }
 
-        [ConfigurableProperty(SourceConnectionKeyName, IsRequired = true, ShortcutName = SourceConnectionShortcutName)]
-        public virtual string SourceConnectionAddress { get; set; }
+        [ConfigurableProperty(SourceLocationKeyName, IsRequired = true, ShortcutName = SourceLocationShortcutName)]
+        public virtual string SourceLocation { get; set; }
 
         [ConfigurableProperty(SourceSpecificationKeyName, IsRequired = true, ShortcutName = SourceSpecificationShortcutName)]
         public virtual string SourceSpecification { get; set; }
 
         [ConfigurableProperty("sourceTimeout", DefaultValue = 30, ShortcutName = "t")]
         public virtual int SourceQueryTimeout { get; set; }
+
+        protected internal bool IsFileSource
+        {
+            get { return Directory.Exists(SourceLocation); }
+        }
 
         [ConfigurableProperty("repositoryHost", DefaultValue = "localhost", ShortcutName = "rh")]
         public virtual string RepositoryHostName

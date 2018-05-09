@@ -19,7 +19,7 @@ namespace XmlToTable.Core
 
         public void OpenConnection()
         {
-            _directoryInfo = new DirectoryInfo(Settings.SourceConnectionAddress);
+            _directoryInfo = new DirectoryInfo(Settings.SourceLocation);
             if (!_directoryInfo.Exists)
             {
                 throw new IOException("The source folder is not available.");
@@ -73,7 +73,7 @@ namespace XmlToTable.Core
 
             foreach (string documentId in documentIds)
             {
-                string fullPath = Path.Combine(Settings.SourceConnectionAddress, documentId);
+                string fullPath = Path.Combine(Settings.SourceLocation, documentId);
                 string xml = File.ReadAllText(fullPath);
                 documentsDataTable.AddDocumentContentRow(documentId, null, xml);
             }

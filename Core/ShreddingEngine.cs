@@ -28,9 +28,17 @@ namespace XmlToTable.Core
         {
             _settings = settings;
             EngineState = ComponentState.Uninitialized;
-            _sourceAdapter = new SqlServerSourceAdapter(_settings);
             _repositoryConnection = new SqlConnection(_settings.GetRepositoryConnectionAddress());
             _adapterContext = new AdapterContext(_settings);
+
+            if (_settings.IsFileSource)
+            {
+                _sourceAdapter = new NtfsSourceAdapter(_settings);
+            }
+            else
+            {
+                _sourceAdapter = new SqlServerSourceAdapter(_settings);
+            }
         }
 
         internal ComponentState EngineState { get; private set; }

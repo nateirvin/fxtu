@@ -23,8 +23,8 @@ namespace XmlToTable.Console
             get { return GetConfigSection() != null; }
         }
 
-        [ConfigurableProperty(SourceConnectionKeyName, IsRequired = false, ShortcutName = SourceConnectionShortcutName)]
-        public override string SourceConnectionAddress { get; set; }
+        [ConfigurableProperty(SourceLocationKeyName, IsRequired = false, ShortcutName = SourceLocationShortcutName)]
+        public override string SourceLocation { get; set; }
 
         [ConfigurableProperty(SourceSpecificationKeyName, IsRequired = false, ShortcutName = SourceSpecificationShortcutName)]
         public override string SourceSpecification { get; set; }
@@ -65,11 +65,11 @@ namespace XmlToTable.Console
 
             if (!GenerateCreationScript && !GenerateUpgradeScript)
             {
-                if (string.IsNullOrWhiteSpace(SourceConnectionAddress))
+                if (string.IsNullOrWhiteSpace(SourceLocation))
                 {
-                    ThrowRequirementException(SourceConnectionKeyName, SourceConnectionShortcutName);
+                    ThrowRequirementException(SourceLocationKeyName, SourceLocationShortcutName);
                 }
-                if (string.IsNullOrWhiteSpace(SourceSpecification))
+                if (!IsFileSource && string.IsNullOrWhiteSpace(SourceSpecification))
                 {
                     ThrowRequirementException(SourceSpecificationKeyName, SourceSpecificationShortcutName);
                 }
