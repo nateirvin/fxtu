@@ -47,7 +47,8 @@ namespace XmlToTable.Core
                 {
                     new EmbeddedXmlUpgrade(_settings.UpgradeDocumentsQuery),
                     new LongestValueUpgrade(),
-                    new NumberToTextUpgrade()
+                    new NumberToTextUpgrade(),
+                    DocumentIdTypeUpgrade.GetKeyValueModelUpgrade()
                 };
             }
         }

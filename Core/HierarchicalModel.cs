@@ -61,7 +61,7 @@ namespace XmlToTable.Core
 
         public IEnumerable<IUpgrade> Upgrades
         {
-            get { return new List<IUpgrade>(); }
+            get { yield return DocumentIdTypeUpgrade.GetHierarchicalModelUpgrade(); }
         }
 
         public void Initialize(SqlConnection repositoryConnection)

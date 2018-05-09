@@ -65,6 +65,16 @@ namespace System.Data
 
         public static int GetInt32(this SqlConnection connection, string query, params SqlParameter[] parameters)
         {
+            return GetScalar(connection, query, parameters, ConvertToInt32);
+        }
+
+        public static string GetString(this SqlConnection connection, string query, params SqlParameter[] parameters)
+        {
+            return GetScalar(connection, query, parameters, ConvertToString);
+        }
+
+        private static T GetScalar<T>(SqlConnection connection, string query, SqlParameter[] parameters, Func<object, T> conversionFunction)
+        {
             using (SqlCommand getCommand = new SqlCommand(query))
             {
                 getCommand.Connection = connection;
@@ -76,8 +86,18 @@ namespace System.Data
 
                 object rawValue = getCommand.ExecuteScalar();
 
-                return (rawValue == DBNull.Value || rawValue == null) ? 0 : (int)rawValue;
+                return conversionFunction(rawValue);
             }
+        }
+
+        private static int ConvertToInt32(object rawValue)
+        {
+            return rawValue == DBNull.Value || rawValue == null ? 0 : (int) rawValue;
+        }
+
+        private static string ConvertToString(object rawValue)
+        {
+            return rawValue == DBNull.Value || rawValue == null ? null : rawValue.ToString();
         }
     }
 }
