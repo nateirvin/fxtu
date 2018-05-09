@@ -287,7 +287,7 @@ namespace XmlToTable.Core
                 {
                     while (batchIdReader.Read())
                     {
-                        idsToProcess.Add((string) batchIdReader[Columns.DocumentId]);
+                        idsToProcess.Add(batchIdReader[Columns.DocumentId].ToString());
                     }
                 }
             }

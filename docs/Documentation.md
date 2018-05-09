@@ -13,7 +13,7 @@ For more info on how to get a database creation or upgrade script, see the [cons
 The source is the database the raw XML is stored in. When setting up XML to Table, you'll need to specify a source _connection_ and source _object_. The source _object_ can be a table, a view, or a query (or the name of a file that contains one of those). If the source object is a query, it cannot contain a common-table expression. You can also specify a source _timeout_.
 
 The table, view, or query must return these columns:
-* **DocumentID** - The unique ID for the XML document. Must be non-null and be convertible to a 32-bit integer.
+* **DocumentID** - The unique ID for the XML document (a non-null value that will be converted to a string).
 * **ProviderName** - Must be a non-null string.
 * **GenerationDate** - The date the document was created. Can be null.
 * **XML** - the full text of the XML document.

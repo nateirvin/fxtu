@@ -13,8 +13,16 @@ namespace XmlToTable.Core.Upgrades
 
         public bool IsRequired(SqlConnection repositoryConnection)
         {
-            int flag = repositoryConnection.GetInt32(SqlStatements.ColumnExists, new SqlParameter("@column_name", Columns.LongestValueLength));
+            int flag = repositoryConnection.GetInt32(ColumnExists, new SqlParameter("@column_name", Columns.LongestValueLength));
             return flag == 0;
+        }
+
+        private static string ColumnExists
+        {
+            get
+            {
+                return @"SELECT 1 FROM sys.columns WHERE columns.object_id = OBJECT_ID('dbo.Variables') AND columns.name = @column_name";
+            }
         }
     }
 }
