@@ -94,7 +94,7 @@ namespace XmlToTable.Core
             Adapter.Initialize(repositoryConnection);
         }
 
-        public void ImportDocument(int documentId, string providerName, XmlDocument content)
+        public void ImportDocument(string documentId, string providerName, XmlDocument content)
         {
             Adapter.ImportDocument(documentId, providerName, content);
         }

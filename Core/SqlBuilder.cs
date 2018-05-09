@@ -23,10 +23,19 @@ namespace XmlToTable.Core
             return String.Format("SELECT DocumentID AS ID FROM {0} WHERE ProviderName = @ProviderName", BuildFromClause(sourceSpecification));
         }
 
-        public static string BuildGetBatchItemsQuery(string sourceSpecification, List<int> idsToProcess)
+        public static string BuildGetBatchItemsQuery(string sourceSpecification, List<string> idsToProcess)
         {
-            string whereClause = String.Format("DocumentID IN ({0})", String.Join(",", idsToProcess));
-            return String.Format("SELECT DocumentID, ProviderName, [XML] FROM {0} WHERE {1}", BuildFromClause(sourceSpecification), whereClause);
+            StringBuilder idCsvList = new StringBuilder();
+            foreach (string id in idsToProcess)
+            {
+                if (idCsvList.Length > 0)
+                {
+                    idCsvList.Append(",");
+                }
+                idCsvList.AppendFormat("'{0}'", id);
+            }
+
+            return String.Format("SELECT DocumentID, ProviderName, [XML] FROM {0} WHERE DocumentID IN ({1})", BuildFromClause(sourceSpecification), idCsvList);
         }
 
         internal static string BuildFromClause(string sourceSpecification)

@@ -10,7 +10,7 @@ namespace XmlToTable.Core
         string DatabaseCreationScript { get; }
         IEnumerable<IUpgrade> Upgrades { get; }
         void Initialize(SqlConnection repositoryConnection);
-        void ImportDocument(int documentId, string providerName, XmlDocument content);
+        void ImportDocument(string documentId, string providerName, XmlDocument content);
         void SaveChanges(SqlTransactionExtended transaction);
     }
 }

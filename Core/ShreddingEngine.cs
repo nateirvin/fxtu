@@ -258,7 +258,7 @@ namespace XmlToTable.Core
             {
                 _adapterContext.Initialize(_repositoryConnection);
 
-                List<int> documentIds = GetIdsToProcess(batchSize);
+                List<string> documentIds = GetIdsToProcess(batchSize);
                 if (documentIds.Count > 0)
                 {
                     Import(documentIds);
@@ -273,9 +273,9 @@ namespace XmlToTable.Core
             }
         }
 
-        private List<int> GetIdsToProcess(int batchSize)
+        private List<string> GetIdsToProcess(int batchSize)
         {
-            List<int> idsToProcess = new List<int>();
+            List<string> idsToProcess = new List<string>();
 
             ShowProgress(0, "Retrieving processing batch");
             using (SqlCommand getBatchIdsCommand = new SqlCommand(SqlStatements.usp_GetBatchToProcess))
@@ -287,7 +287,7 @@ namespace XmlToTable.Core
                 {
                     while (batchIdReader.Read())
                     {
-                        idsToProcess.Add((int) batchIdReader[Columns.DocumentId]);
+                        idsToProcess.Add((string) batchIdReader[Columns.DocumentId]);
                     }
                 }
             }
@@ -295,7 +295,7 @@ namespace XmlToTable.Core
             return idsToProcess;
         }
 
-        private void Import(List<int> documentIds)
+        private void Import(List<string> documentIds)
         {
             int processedCount = 0;
             using (IDataReader batchItemReader = _sourceAdapter.GetDocumentBatchReader(documentIds))
@@ -305,7 +305,7 @@ namespace XmlToTable.Core
                     processedCount++;
                     ShowItemProgress("Importing", processedCount, documentIds.Count);
 
-                    int documentID = Convert.ToInt32(batchItemReader[Columns.DocumentId]);
+                    string documentID = batchItemReader[Columns.DocumentId].ToString();
                     string providerName = batchItemReader[Columns.ProviderName].ToString();
                     string xml = batchItemReader[Columns.Xml].ToString();
 
@@ -349,7 +349,7 @@ namespace XmlToTable.Core
             ShowProgress(progressPercentage, message);
         }
 
-        private void CommitChanges(List<int> documentIds)
+        private void CommitChanges(List<string> documentIds)
         {
             ShowProgress(0, "Writing");
 
@@ -369,10 +369,10 @@ namespace XmlToTable.Core
             }
         }
 
-        private void UpdateProcessedItems(SqlTransaction transaction, List<int> processedDocumentIds)
+        private void UpdateProcessedItems(SqlTransaction transaction, List<string> processedDocumentIds)
         {
             DataTable parameterValue = BuildIdsDataTable();
-            foreach (int id in processedDocumentIds)
+            foreach (string id in processedDocumentIds)
             {
                 DataRow row = parameterValue.NewRow();
                 row["ID"] = id;
@@ -392,7 +392,7 @@ namespace XmlToTable.Core
         private static DataTable BuildIdsDataTable()
         {
             DataTable table = new DataTable();
-            table.Columns.Add("ID", typeof(int));
+            table.Columns.Add("ID", typeof(string));
             return table;
         }
 

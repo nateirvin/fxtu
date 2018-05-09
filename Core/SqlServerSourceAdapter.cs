@@ -42,7 +42,7 @@ namespace XmlToTable.Core
             return priorityItemsContainer.Tables[0];
         }
 
-        public IDataReader GetDocumentBatchReader(List<int> documentIds)
+        public IDataReader GetDocumentBatchReader(List<string> documentIds)
         {
             DisposeCurrentBatchRead();
 

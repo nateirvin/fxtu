@@ -80,7 +80,7 @@ namespace XmlToTable.Core
             }
         }
 
-        public void ImportDocument(int documentId, string providerName, XmlDocument content)
+        public void ImportDocument(string documentId, string providerName, XmlDocument content)
         {
             if (content.DocumentElement != null)
             {
@@ -90,7 +90,7 @@ namespace XmlToTable.Core
             }
         }
 
-        private void Import(int documentId, string parentXPath, XmlNode node)
+        private void Import(string documentId, string parentXPath, XmlNode node)
         {
             List<XmlNode> childNodesCollection = node.GetNestedChildren();
             Dictionary<string, int> elementSequences = new Dictionary<string, int>();
@@ -128,7 +128,7 @@ namespace XmlToTable.Core
             }
         }
 
-        private void AddVariablesFromAttributes(int documentId, XmlNode node, string currentXPath)
+        private void AddVariablesFromAttributes(string documentId, XmlNode node, string currentXPath)
         {
             foreach (XmlAttribute attribute in node.GetAttributes())
             {
@@ -139,7 +139,7 @@ namespace XmlToTable.Core
             }
         }
 
-        private void AddDocumentVariable(int documentId, string currentXPath, string rawValue)
+        private void AddDocumentVariable(string documentId, string currentXPath, string rawValue)
         {
             string useableValue = rawValue.ToNullPreferredString();
 
@@ -204,7 +204,7 @@ namespace XmlToTable.Core
         private void SaveDocumentVariables(SqlTransactionExtended transaction)
         {
             DataTable parameterValue = new DataTable();
-            parameterValue.Columns.Add(Columns.DocumentId, typeof (int));
+            parameterValue.Columns.Add(Columns.DocumentId, typeof (string));
             parameterValue.Columns.Add(Columns.XPathColumnName, typeof (string));
             parameterValue.Columns.Add(Columns.ValueColumnName, typeof (string));
 

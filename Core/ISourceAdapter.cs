@@ -9,6 +9,6 @@ namespace XmlToTable.Core
         void OpenConnection();
         DataTable GetDocumentInfos();
         DataTable GetPriorityItems();
-        IDataReader GetDocumentBatchReader(List<int> documentIds);
+        IDataReader GetDocumentBatchReader(List<string> documentIds);
     }
 }

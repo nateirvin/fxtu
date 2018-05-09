@@ -138,7 +138,7 @@ namespace XmlToTable.Core
             _initialized = true;
         }
 
-        public void ImportDocument(int documentId, string providerName, XmlDocument content)
+        public void ImportDocument(string documentId, string providerName, XmlDocument content)
         {
             string schemaName = providerName.ToSqlName();
 
@@ -166,7 +166,7 @@ namespace XmlToTable.Core
             return schema;
         }
 
-        private void Import(string schemaName, DataRow parent, XmlNode content, int? documentId = null)
+        private void Import(string schemaName, DataRow parent, XmlNode content, string documentId = null)
         {
             string tableNameFromXml = content.Name.ToSqlName();
             int maxTableNameLength = _settings.UseForeignKeys ? _settings.MaximumNameLength - Columns.Identity.Length : _settings.MaximumNameLength;
@@ -179,7 +179,7 @@ namespace XmlToTable.Core
 
             if (parent == null)
             {
-                data.Add(Columns.DocumentId, documentId.Value);
+                data.Add(Columns.DocumentId, documentId);
             }
 
             foreach (XmlAttribute attribute in content.GetAttributes())
@@ -268,7 +268,7 @@ namespace XmlToTable.Core
                 DataColumn primaryKeyColumn;
                 if (parent == null)
                 {
-                    primaryKeyColumn = AddNewColumn(table, Columns.DocumentId, SqlDbType.Int, allowDbNull: false);
+                    primaryKeyColumn = AddNewColumn(table, Columns.DocumentId, SqlDbType.NVarChar, allowDbNull: false, maxLength: 260);
                     AddForeignKey(_documentsTable.Columns[Columns.DocumentId], primaryKeyColumn);
                 }
                 else

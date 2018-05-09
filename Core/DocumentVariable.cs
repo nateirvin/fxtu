@@ -2,7 +2,7 @@
 {
     internal class DocumentVariable
     {
-        public int DocumentID { get; set; }
+        public string DocumentID { get; set; }
         public Variable Variable { get; set; }
         public string Value { get; set; }
     }
