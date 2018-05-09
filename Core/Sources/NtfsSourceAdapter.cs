@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -69,21 +70,58 @@ namespace XmlToTable.Core.Sources
 
         public IEnumerable<DocumentContent> GetContent(IEnumerable<string> documentIds)
         {
-            List<DocumentContent> contentRecords = new List<DocumentContent>();
+            return new FileByFileReader(Settings.SourceLocation, documentIds).ToEnumerable();
+        }
 
-            foreach (string documentId in documentIds)
+        private class FileByFileReader : IEnumerator<DocumentContent>
+        {
+            private readonly IEnumerator<string> _idListEnumerator;
+
+            public FileByFileReader(string folderRoot, IEnumerable<string> documentIds)
             {
-                string fullPath = Path.Combine(Settings.SourceLocation, documentId);
-                string xml = File.ReadAllText(fullPath);
-                contentRecords.Add(new DocumentContent
-                {
-                    DocumentID = documentId,
-                    ProviderName = DefaultProviderName,
-                    Xml = xml
-                });
+                FolderRoot = folderRoot;
+                _idListEnumerator = documentIds.GetEnumerator();
             }
 
-            return contentRecords;
+            private string FolderRoot { get; }
+
+            public bool MoveNext()
+            {
+                return _idListEnumerator.MoveNext();
+            }
+
+            public void Reset()
+            {
+                _idListEnumerator.Reset();
+            }
+
+            public DocumentContent Current
+            {
+                get
+                {
+                    if (_idListEnumerator.Current == null)
+                    {
+                        return null;
+                    }
+
+                    string documentId = _idListEnumerator.Current;
+                    string fullPath = Path.Combine(FolderRoot, documentId);
+                    string xml = File.ReadAllText(fullPath);
+                    return new DocumentContent
+                    {
+                        DocumentID = documentId,
+                        ProviderName = DefaultProviderName,
+                        Xml = xml
+                    };
+                }
+            }
+
+            object IEnumerator.Current => Current;
+
+            public void Dispose()
+            {
+                _idListEnumerator.Dispose();
+            }
         }
 
         public void Dispose()

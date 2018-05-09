@@ -50,16 +50,46 @@ namespace XmlToTable.Core.Sources
             getBatchCommand.Connection = _sourceConnection;
             getBatchCommand.CommandTimeout = _settings.SourceQueryTimeout;
             SqlDataReader reader = getBatchCommand.ExecuteReader();
-            return RecordStream<DocumentContent>.CreateStream(reader, BuildContentObject);
+            return new SqlDataEnumerable(reader).ToEnumerable();
         }
 
-        private DocumentContent BuildContentObject(IDataReader reader)
+        private class SqlDataEnumerable : IEnumerator<DocumentContent>
         {
-            DocumentContent documentContent = new DocumentContent();
-            documentContent.DocumentID = reader[Columns.DocumentId].ToString();
-            documentContent.ProviderName = reader[Columns.ProviderName].ToString();
-            documentContent.Xml = reader[Columns.Xml].ToString();
-            return documentContent;
+            private readonly SqlDataReader _reader;
+
+            public SqlDataEnumerable(SqlDataReader reader)
+            {
+                _reader = reader;
+            }
+
+            public bool MoveNext()
+            {
+                return _reader.Read();
+            }
+
+            public void Reset()
+            {
+                throw new NotSupportedException();
+            }
+
+            object IEnumerator.Current => Current;
+
+            public DocumentContent Current
+            {
+                get
+                {
+                    DocumentContent documentContent = new DocumentContent();
+                    documentContent.DocumentID = _reader[Columns.DocumentId].ToString();
+                    documentContent.ProviderName = _reader[Columns.ProviderName].ToString();
+                    documentContent.Xml = _reader[Columns.Xml].ToString();
+                    return documentContent;
+                }
+            }
+
+            public void Dispose()
+            {
+                _reader.Dispose();
+            }
         }
 
         public void Dispose()
