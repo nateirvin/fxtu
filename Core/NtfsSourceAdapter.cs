@@ -45,7 +45,7 @@ namespace XmlToTable.Core
                     {
                         fileKey = fileKey.Substring(1);
                     }
-                    documentsDataTable.AddDocumentsRow(fileKey, null, 0, fileInfo.CreationTime);
+                    documentsDataTable.AddDocumentsRow(fileKey, "unknown_provider", 0, fileInfo.CreationTime);
                 }
             }
 
@@ -75,7 +75,7 @@ namespace XmlToTable.Core
             {
                 string fullPath = Path.Combine(Settings.SourceLocation, documentId);
                 string xml = File.ReadAllText(fullPath);
-                documentsDataTable.AddDocumentContentRow(documentId, null, xml);
+                documentsDataTable.AddDocumentContentRow(documentId, "unknown_provider", xml);
             }
 
             return new DataTableReader(documentsDataTable);
