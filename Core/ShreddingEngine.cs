@@ -307,39 +307,33 @@ namespace XmlToTable.Core
         private void Import(List<string> documentIds)
         {
             int processedCount = 0;
-            using (IDataReader batchItemReader = _sourceAdapter.GetDocumentBatchReader(documentIds))
+            foreach (DocumentContent documentInfo in _sourceAdapter.GetContent(documentIds))
             {
-                while (batchItemReader.Read())
+                processedCount++;
+                ShowItemProgress("Importing", processedCount, documentIds.Count);
+
+                XmlDocument xmlDocument = null;
+                if (!string.IsNullOrWhiteSpace(documentInfo.Xml))
                 {
-                    processedCount++;
-                    ShowItemProgress("Importing", processedCount, documentIds.Count);
-
-                    string documentID = batchItemReader[Columns.DocumentId].ToString();
-                    string providerName = batchItemReader[Columns.ProviderName].ToString();
-                    string xml = batchItemReader[Columns.Xml].ToString();
-
-                    XmlDocument xmlDocument = null;
-                    if (!string.IsNullOrWhiteSpace(xml))
+                    try
                     {
-                        try
-                        {
-                            xmlDocument = xml.ToXmlDocument();
-                        }
-                        catch (XmlException xmlException)
-                        {
-                            ShowProgress(0, string.Format("\nDocument {0} was malformed. ({1})", documentID, xmlException.Message));
-                        }
+                        xmlDocument = documentInfo.Xml.ToXmlDocument();
                     }
-                    if (xmlDocument != null)
+                    catch (XmlException xmlException)
                     {
-                        try
-                        {
-                            _adapterContext.ImportDocument(documentID, providerName, xmlDocument);
-                        }
-                        catch (Exception processingException)
-                        {
-                            throw new InvalidOperationException(string.Format("Error processing item {0}: {1}", documentID, processingException.Message), processingException);
-                        }
+                        ShowProgress(0, string.Format("\nDocument {0} was malformed. ({1})", documentInfo.DocumentID, xmlException.Message));
+                    }
+                }
+
+                if (xmlDocument != null)
+                {
+                    try
+                    {
+                        _adapterContext.ImportDocument(documentInfo.DocumentID, documentInfo.ProviderName, xmlDocument);
+                    }
+                    catch (Exception processingException)
+                    {
+                        throw new InvalidOperationException(string.Format("Error processing item {0}: {1}", documentInfo.DocumentID, processingException.Message), processingException);
                     }
                 }
             }

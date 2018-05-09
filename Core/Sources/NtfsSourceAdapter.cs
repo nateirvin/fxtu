@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -8,6 +7,7 @@ namespace XmlToTable.Core.Sources
 {
     internal class NtfsSourceAdapter : ISourceAdapter
     {
+        private const string DefaultProviderName = "unknown_provider";
         private DirectoryInfo _directoryInfo;
 
         public NtfsSourceAdapter(ShreddingEngineSettings settings)
@@ -45,7 +45,7 @@ namespace XmlToTable.Core.Sources
                     {
                         fileKey = fileKey.Substring(1);
                     }
-                    documentsDataTable.AddMetaDataRow(fileKey, "unknown_provider", 0, fileInfo.CreationTime);
+                    documentsDataTable.AddMetaDataRow(fileKey, DefaultProviderName, 0, fileInfo.CreationTime);
                 }
             }
 
@@ -67,18 +67,23 @@ namespace XmlToTable.Core.Sources
             throw new NotSupportedException();
         }
 
-        public IDataReader GetDocumentBatchReader(List<string> documentIds)
+        public IEnumerable<DocumentContent> GetContent(IEnumerable<string> documentIds)
         {
-            DocumentModel.ContentDataTable documentsDataTable = new DocumentModel.ContentDataTable();
+            List<DocumentContent> contentRecords = new List<DocumentContent>();
 
             foreach (string documentId in documentIds)
             {
                 string fullPath = Path.Combine(Settings.SourceLocation, documentId);
                 string xml = File.ReadAllText(fullPath);
-                documentsDataTable.AddContentRow(documentId, "unknown_provider", xml);
+                contentRecords.Add(new DocumentContent
+                {
+                    DocumentID = documentId,
+                    ProviderName = DefaultProviderName,
+                    Xml = xml
+                });
             }
 
-            return new DataTableReader(documentsDataTable);
+            return contentRecords;
         }
 
         public void Dispose()

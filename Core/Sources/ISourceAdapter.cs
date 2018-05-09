@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 
 namespace XmlToTable.Core.Sources
 {
@@ -9,6 +8,6 @@ namespace XmlToTable.Core.Sources
         void OpenConnection();
         DocumentModel.MetaDataDataTable GetDocumentMetaData();
         DocumentModel.IdListDataTable GetPriorityItems();
-        IDataReader GetDocumentBatchReader(List<string> documentIds);
+        IEnumerable<DocumentContent> GetContent(IEnumerable<string> documentIds);
     }
 }

@@ -42,6 +42,7 @@
     <Compile Include="Columns.cs" />
     <Compile Include="ComponentState.cs" />
     <Compile Include="ConfigurablePropertyAttribute.cs" />
+    <Compile Include="Sources\DocumentContent.cs" />
     <Compile Include="Sources\DocumentModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

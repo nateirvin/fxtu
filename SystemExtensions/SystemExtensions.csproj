@@ -37,6 +37,7 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Collections\RecordStream.cs" />
     <Compile Include="Data\SqlClient\SqlServer.cs" />
     <Compile Include="Data\SqlClient\SqlTransactionExtended.cs" />
     <Compile Include="Data\SqlClient\TransactionFinishedEventArgs.cs" />
