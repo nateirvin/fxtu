@@ -26,6 +26,8 @@ namespace Tests
         [TestCase(SqlDbType.Int, null, "8456156")] 
         [TestCase(SqlDbType.Float, null, "123.45")]
         [TestCase(SqlDbType.DateTime, null, "3/1/2015")]
+        [TestCase(SqlDbType.DateTime, null, "10/2/2014 9:52:18 AM")]
+        [TestCase(SqlDbType.DateTime, null, "1/1/0001 12:00:00 AM")]
         [TestCase(SqlDbType.NVarChar, null, "aloha!")]
 
         [TestCase(SqlDbType.Bit, SqlDbType.Bit, null)]
@@ -130,6 +132,23 @@ namespace Tests
             object actual = _classUnderTest.ConvertTo(typeof(float), "+131,000.77");
 
             Assert.AreEqual(131000.77F, actual);
+        }
+
+        [Test]
+        public void ConvertTo_ReturnsDateTime_ForDateTime()
+        {
+            object actual = _classUnderTest.ConvertTo(typeof(DateTime), "10/2/2014 9:52:18 AM");
+
+            Assert.IsInstanceOf<DateTime>(actual);
+            Assert.AreEqual(new DateTime(2014, 10, 2, 9, 52, 18), actual);
+        }
+
+        [Test]
+        public void ConvertTo_ReturnsNull_ForDateTimeMin()
+        {
+            object actual = _classUnderTest.ConvertTo(typeof(DateTime), "1/1/0001 12:00:00 AM");
+
+            Assert.IsNull(actual);
         }
 
         [TestCase("131 +")]

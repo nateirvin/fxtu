@@ -131,7 +131,17 @@ namespace XmlToTable.Core
                 Parser parser = Parser.GetParser(destinationType);
                 if (parser != null)
                 {
-                    return parser.Parse(rawValue);
+                    object parsedValue = parser.Parse(rawValue);
+
+                    if (destinationType == typeof(DateTime))
+                    {
+                        if (Equals(parsedValue, DateTime.MinValue))
+                        {
+                            return null;
+                        }
+                    }
+
+                    return parsedValue;
                 }
             }
 
